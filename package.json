@@ -1,0 +1,23 @@
+{
+  "name": "techconnect",
+  "version": "1.0.0",
+  "description": "Final Project for CS546",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Xavier Kyle Diwakar Chris",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XavierCarty95/CS-546-WS-Tech-Connect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/XavierCarty95/CS-546-WS-Tech-Connect/issues"
+  },
+  "homepage": "https://github.com/XavierCarty95/CS-546-WS-Tech-Connect#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongod": "^2.0.0"
+  }
+}
