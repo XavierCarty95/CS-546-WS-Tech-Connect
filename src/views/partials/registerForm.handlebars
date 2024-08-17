@@ -1,0 +1,67 @@
+<form action="/register" method="POST" enctype="multipart/form-data" class="register-form">
+    <div class="form-group">
+        <label for="firstname">First Name</label>
+        <input type="text" id="firstname" name="firstname" required>
+    </div>
+
+    <div class="form-group">
+        <label for="lastname">Last Name</label>
+        <input type="text" id="lastname" name="lastname" required>
+    </div>
+
+    <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+            <option value="recruiter">Recruiter</option>
+            <option value="candidate">Candidate</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label for="companyID">Company ID</label>
+        <input type="text" id="companyID" name="companyID" required>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+
+    <div class="form-group">
+        <label for="profilePic">Profile Picture (optional)</label>
+        <input type="file" id="profilePic" name="profilePic" accept="image/*">
+    </div>
+
+    <div class="form-group">
+        <label for="jobRole">Job Role (optional)</label>
+        <input type="text" id="jobRole" name="jobRole">
+    </div>
+
+    <div class="form-group">
+        <label for="experience">Experience (optional)</label>
+        <input type="text" id="experience" name="experience">
+    </div>
+
+    <div class="form-group">
+        <label for="githubLink">GitHub Link (optional)</label>
+        <input type="url" id="githubLink" name="githubLink">
+    </div>
+
+    <div class="form-group">
+        <label for="resume">Resume (optional)</label>
+        <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+    </div>
+
+    <button type="submit" class="submit-button">Register</button>
+    <p>Already have an account? <a href="/login">Login here</a></p>
+</form>
