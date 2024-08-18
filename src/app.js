@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import session from 'express-session'
 dotenv.config();
 
 //import { notFound, errorHandler } from './middlewares.js';
@@ -43,6 +44,16 @@ const rewriteUnsupportedBrowserMethods = (req,res,next) => {
 
     next();
 }
+
+app.use(
+    session({
+      name: 'TechConnect',
+      secret: "This is a secret.. shhh don't tell anyone",
+      saveUninitialized: false,
+      resave: false,
+      cookie: {maxAge: 60000}
+    })
+  );
 
 app.set('views', path.join(__dirname, 'views'));
 const handlebarsInstance = exphbs.create({
@@ -112,6 +123,11 @@ app.use('/register', (req,res,next) => {
     // }   
     next()
 })
+
+app.use('/logout', async (req, res) => {
+    req.session.destroy();
+    res.render('logout')
+  });
 
 
   app.use('/public', express.static(path.join(__dirname, 'public')));

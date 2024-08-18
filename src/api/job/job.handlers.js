@@ -17,10 +17,10 @@ export const createJob = async (req, res) => {
 export const getJobs = async (req, res) => {
     try {
         const jobs = await Job.find();
-        console.log(jobMock)
         res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
-            jobMock: jobMock
+            jobMock: jobMock,
+            showLogout: true
         })
     } catch (error) {
         res.status(500).json({ message: 'Error fetching jobs', error });

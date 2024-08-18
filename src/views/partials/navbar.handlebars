@@ -4,5 +4,8 @@
         <li><a href="/job">Jobs</a></li>
         <li><a href="/profile">Profile</a></li>
         <li><a href="/savedhistory">Saved History</a></li>
+        {{#if showLogout}}
+            <li class="push-right"><a href="/logout" class="logout-button">Logout</a></li>
+        {{/if}}
     </ul>
 </nav>

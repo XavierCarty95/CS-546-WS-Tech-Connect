@@ -39,7 +39,12 @@ export const getUsers = async (req, res) => {
     const users = await User.find();
     
 
-    res.status(200).render('users/feed', { header: "Users", title: 'User Feed', candidates: candidates });
+    res.status(200).render('users/feed',
+     { header: "Users", 
+       title: 'User Feed', 
+       candidates: candidates,
+       showLogout: true
+      });
   } catch (error) {
     res.status(500).json({ message: "Error fetching users", error });
   }

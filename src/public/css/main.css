@@ -1,7 +1,18 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1 { 
@@ -37,10 +48,6 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 
-
-
-
-
 /* Card Grid */
 .card-grid {
     display: grid;
@@ -60,10 +67,12 @@ nav ul li a:hover {
     padding: 15px;
 }
 
-.card img {
-    max-width: 100%;
-    height: auto;
-    border-bottom: 1px solid #ddd;
+.card img.profile-pic {
+    width: 200px;        
+    height: 200px;         
+    border-radius: 50%;     
+    object-fit: cover;      
+    margin-bottom: 15px;    
 }
 
 .card h3 {
@@ -391,8 +400,8 @@ nav ul li a:hover {
 
 /* Footer Styles */
 footer {
-    margin: 0; /* Ensure there's no margin on the footer */
-    background-color: #333;
+    margin-top: auto; /* Ensure the footer stays at the bottom */
+    background-color: #000000;
     color: #fff;
     padding: 20px 0; /* Adjust padding as needed */
     text-align: center;
@@ -406,4 +415,59 @@ footer {
 main {
     flex: 1; /* This makes the main content area take up the remaining space */
     padding: 20px; /* Adjust as needed */
+}
+
+.push-right {
+    margin-left: auto; /* Pushes the logout button all the way to the right */
+}
+
+.saved-jobs-container {
+    max-width: 800px;
+    margin: 0;
+    padding: 20px;
+    height: 100%;
+}
+
+.saved-jobs-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.saved-jobs-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.saved-job-card {
+    background-color: #f8f8f8;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.saved-job-card h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.saved-job-card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.remove-job-button {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.remove-job-button:hover {
+    background-color: #ff3333;
 }

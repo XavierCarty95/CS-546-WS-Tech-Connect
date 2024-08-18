@@ -22,7 +22,12 @@ export const createSavedHistory = async (req, res) => {
 export const getAllSavedHistories = async (req, res) => {
   try {
     const histories = await SavedHistory.find();
-    res.status(200).json(histories);
+    const savedJobs = [
+      // Example data; replace with your actual database query
+      { Applicant_Name: "John Doe", Job_id: "12345", Applied_datetime: "2024-08-01 10:00 AM" },
+      { Applicant_Name: "Jane Smith", Job_id: "67890", Applied_datetime: "2024-08-02 2:00 PM" },
+  ];
+    res.status(200).render('saved_jobs/savedJobs', { savedJobs, showLogout: true })
   } catch (error) {
     res.status(500).json({ message: 'Error fetching saved histories', error });
   }

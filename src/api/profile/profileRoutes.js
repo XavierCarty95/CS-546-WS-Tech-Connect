@@ -6,7 +6,7 @@ router.get("/", (req, res) => {
         name: 'John Doe',
         email: 'john.doe@example.com',
         phone: '123-456-7890',
-        profilePic: '/public/images/profile-pic.jpg',
+        profilePic: '/public/images/dog.jpg',
         companyID: 'COMP1234',
         jobRole: 'Software Developer',
         experience: '5 years',
@@ -16,7 +16,8 @@ router.get("/", (req, res) => {
 
     res.status(200).render('profilePage/profile', { 
         title: 'Profile', 
-        user 
+        user, 
+        showLogout: true
     });
    
 });
@@ -28,13 +29,15 @@ router.get('/edit', (req, res) => {
         email: 'john.doe@example.com',
         phone: '123-456-7890',
         jobRole: 'Software Developer',
+        profilePic: '/public/images/dog.jpg',
         experience: '5 years',
         githubLink: 'https://github.com/johndoe',
     };
 
     res.render('profilePage/editProfile', { 
         title: 'Edit Profile', 
-        user 
+        user, 
+        showLogout: true
     });
 });
 

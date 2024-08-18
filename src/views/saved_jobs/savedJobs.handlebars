@@ -1,0 +1,14 @@
+ {{#if savedJobs.length}}
+            <ul class="saved-jobs-list">
+                {{#each savedJobs}}
+                <li class="saved-job-card">
+                    <h2>Applicant: {{this.Applicant_Name}}</h2>
+                    <p><strong>Job ID:</strong> {{this.Job_id}}</p>
+                    <p><strong>Applied On:</strong> {{this.Applied_datetime}}</p>
+                    <button class="remove-job-button">Remove</button>
+                </li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p>No saved jobs found.</p>
+        {{/if}}
