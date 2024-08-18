@@ -1,4 +1,5 @@
 import User from "./user.model.js";
+import { candidates } from '../../helpers/dummyData.js'
 
 export const createUser = async (req, res) => {
   try {
@@ -36,14 +37,9 @@ export const authenticateUser = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const users = await User.find();
-    const cards = [
-      { image: '/public/images/img1.jpg', title: 'Card 1', description: 'Description for card 1.' },
-      { image: '/public/images/img2.jpg', title: 'Card 2', description: 'Description for card 2.' },
-      { image: '/public/images/img3.jpg', title: 'Card 3', description: 'Description for card 3.' }
-      // Add more cards as needed
-  ];
+    
 
-    res.status(200).render('users/feed', { header: "Users", title: 'User Feed', cards });
+    res.status(200).render('users/feed', { header: "Users", title: 'User Feed', candidates: candidates });
   } catch (error) {
     res.status(500).json({ message: "Error fetching users", error });
   }

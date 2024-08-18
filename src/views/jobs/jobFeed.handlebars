@@ -1,0 +1,17 @@
+ <section class="job-feed">
+            <h1>Job Openings</h1>
+            <div class="job-grid">
+                {{#each jobMock}}
+                <div class="job-card">
+                    <h2>{{this.company}}</h2>
+                    <p><strong>Description:</strong> {{this.job_description}}</p>
+                    <p><strong>Compensation:</strong> {{this.compensation}}</p>
+                    <p><strong>Mode:</strong> {{this.mode}}</p>
+                    <p><strong>Category:</strong> {{this.category}}</p>
+                    <p><strong>Posted on:</strong> {{this.posted_date}}</p>
+                    <p><strong>Likes:</strong> {{this.likes}}</p>
+                    <button class="apply-button">Apply Now</button>
+                </div>
+                {{/each}}
+            </div>
+</section>

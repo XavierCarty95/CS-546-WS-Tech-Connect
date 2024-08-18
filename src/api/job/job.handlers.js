@@ -1,4 +1,5 @@
 import Job from './job.model.js';
+import { jobMock } from '../../helpers/jobFeedData.js'
 
 
 export const createJob = async (req, res) => {
@@ -16,7 +17,11 @@ export const createJob = async (req, res) => {
 export const getJobs = async (req, res) => {
     try {
         const jobs = await Job.find();
-        res.status(200).json(jobs);
+        console.log(jobMock)
+        res.status(200).render('jobs/jobFeed', { 
+            title: 'Job Feed',
+            jobMock: jobMock
+        })
     } catch (error) {
         res.status(500).json({ message: 'Error fetching jobs', error });
     }

@@ -1,9 +1,11 @@
 <div class="card-grid">
-    {{#each cards}} <!-- Assuming 'cards' is passed as context from your route -->
-    <div class="card">
-        <img src="{{this.image}}" alt="{{this.title}}">
-        <h3> "Hey </h3>
-        <p>"Chill"</p>
-    </div>
-    {{/each}}
-</div>
+            {{#each candidates}} <!-- Loop through each candidate in the 'candidates' array -->
+            <div class="card">
+                <img src="{{this.profilePic}}" alt="{{this.firstname}} {{this.lastname}}">
+                <h3>{{this.firstname}} {{this.lastname}}</h3> <!-- Display the candidate's name -->
+                <p><strong>Job Role:</strong> {{this.jobRole}}</p> <!-- Display the job role -->
+                <p><strong>Experience:</strong> {{this.experience}}</p> <!-- Display the experience -->
+                <p><strong>GitHub:</strong> <a href="{{this.githubLink}}" target="_blank">{{this.githubLink}}</a></p> <!-- Display the GitHub link -->
+            </div>
+            {{/each}}
+        </div>

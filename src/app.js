@@ -10,6 +10,7 @@ import exphbs from 'express-handlebars'
 import userRoutes from './api/user/user.routes.js';
 import jobRoutes from './api/job/job.routes.js'
 import savedHistoryRoutes from './api/saved_history/saved_history.routes.js';
+import profileRoutes from './api/profile/profileRoutes.js'
 import connectDB from './db.js';
 import path from 'path'
 import { fileURLToPath } from 'url';
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use('/user', userRoutes);
 app.use('/job',jobRoutes);
 app.use('/savedhistory',savedHistoryRoutes)
+app.use('/profile', profileRoutes)
 //app.use(notFound);
 //app.use(errorHandler);
 
