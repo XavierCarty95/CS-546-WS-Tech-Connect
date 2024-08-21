@@ -1,11 +1,13 @@
 <nav>
     <ul>
-        <li><a href="/user">Home</a></li>
-        <li><a href="/job">Jobs</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="/savedhistory">Saved History</a></li>
         {{#if showLogout}}
+            <li><a href="/user">Home</a></li>
+            <li><a href="/job">Jobs</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/savedhistory">Saved History</a></li>
             <li class="push-right"><a href="/logout" class="logout-button">Logout</a></li>
+        {{else}}
+            <li><a href="/">Tech Connect</a></li>
         {{/if}}
     </ul>
 </nav>

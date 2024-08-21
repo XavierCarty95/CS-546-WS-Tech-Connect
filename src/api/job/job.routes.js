@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post("/", jobHandlers.createJob);
 router.get("/", jobHandlers.getJobs);
+router.get('/create', jobHandlers.renderJobForm);
 router.get("/:id", jobHandlers.getJobById);
 router.put("/:id", jobHandlers.updateJob);
 router.delete("/:id", jobHandlers.deleteJob);

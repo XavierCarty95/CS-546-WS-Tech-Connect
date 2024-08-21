@@ -1,19 +1,21 @@
-import express  from 'express';
+import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import session from 'express-session'
+import session from 'express-session';
 dotenv.config();
+import bcrypt from 'bcryptjs'
 
-//import { notFound, errorHandler } from './middlewares.js';
-import exphbs from 'express-handlebars'
+import exphbs from 'express-handlebars';
 import userRoutes from './api/user/user.routes.js';
-import jobRoutes from './api/job/job.routes.js'
+import jobRoutes from './api/job/job.routes.js';
 import savedHistoryRoutes from './api/saved_history/saved_history.routes.js';
-import profileRoutes from './api/profile/profileRoutes.js'
+import profileRoutes from './api/profile/profileRoutes.js';
+import User from "./api/user/user.model.js";
+
 import connectDB from './db.js';
-import path from 'path'
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,121 +23,151 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 connectDB();
+
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-
-
-
-app.use('/user', userRoutes);
-app.use('/job',jobRoutes);
-app.use('/savedhistory',savedHistoryRoutes)
-app.use('/profile', profileRoutes)
-//app.use(notFound);
-//app.use(errorHandler);
-
-const rewriteUnsupportedBrowserMethods = (req,res,next) => { 
-    if (req.body && req.body._method) { 
-        req._method = req.body._method
-        delete req.body._method
-    }
-
-    next();
-}
-
+// Session middleware should be here, before routes
 app.use(
     session({
-      name: 'TechConnect',
-      secret: "This is a secret.. shhh don't tell anyone",
-      saveUninitialized: false,
-      resave: false,
-      cookie: {maxAge: 60000}
+        name: 'TechConnect',
+        secret: "This is a secret.. shhh don't tell anyone",
+        saveUninitialized: false,
+        resave: false,
+        cookie: {
+            maxAge: 1800000,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+        }
     })
-  );
+);
 
+// Log session info
+app.use((req, res, next) => {
+    console.log('Session:', req.session);
+    console.log('Session ID:', req.sessionID);
+    next();
+});
+
+// Rewrite unsupported methods middleware
+// app.use(rewriteUnsupportedBrowserMethods);
+
+// Routes
+function isAuthenticated(req, res, next) {
+    if (req.session && req.session.user) {
+        return next();
+    } else {
+        return res.redirect('/login');
+    }
+}
+app.use('/user', isAuthenticated,  userRoutes);
+app.use('/job',isAuthenticated, jobRoutes);
+app.use('/savedhistory', isAuthenticated, savedHistoryRoutes);
+app.use('/profile', isAuthenticated, profileRoutes);
+
+// View setup
 app.set('views', path.join(__dirname, 'views'));
 const handlebarsInstance = exphbs.create({
     defaultLayout: 'main',
-    // Specify helpers which are only registered on this instance.
     helpers: {
-      asJSON: (obj, spacing) => {
-        if (typeof spacing === 'number')
-          return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
-  
-        return new Handlebars.SafeString(JSON.stringify(obj));
-      },
-  
-      partialsDir: ['views/partials/']
+        asJSON: (obj, spacing) => {
+            if (typeof spacing === 'number')
+                return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
+            return new Handlebars.SafeString(JSON.stringify(obj));
+        },
+        partialsDir: ['views/partials/']
     }
-  });
+});
 
-  app.get('/', (req, res) => {
+app.engine('handlebars', handlebarsInstance.engine);
+app.set('view engine', 'handlebars');
+
+// Routes for login, register, and logout
+app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
-// app.use((req, res, next) => { 
-//     // const currentTime = new Date().toUTCString()
-//     // const requestMethod = req.method
-//     // const requestRoute = req.originalUrl
-//     // // const isAuthenticated = req.session.user ? 'Authenticated User' : ' Non-Authenticted User'
+app.get('/login', (req, res) => {
+    if (req.session.user) {
+        if (req.session.user.role == 'recruiter') {
+            return res.redirect('/user'); // Redirect to the user feed
+        } else {
+            return res.redirect('/job'); // Redirect to the job feed
+        }
+    } else {
+        res.render('login', { 
+            title: 'Login',
+            showLogout: false // Only show "Tech Connect" in the navbar
+        });
+    }
+});
 
-//     // console.log(`[${currentTime}]: ${requestMethod} ${requestRoute} (${isAuthenticated})`)
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-//     if (req.path === '/') { 
-//         // if(req.session.user) { 
-//         //     if(req.session.user.role === 'admin') { 
-//         //         return res.redirect('/admin')
-//         //     } else if (req.session.user.role === 'user') { 
-//         //         return res.redirect('/user')
-//         //     }
-//         // } else { 
-//         //     return res.redirect('/login')
-//         // }
-//         next()
-//     }
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
 
-// })
+        const user = await User.findOne({ email });
 
-app.use('/login', (req,res,next) => { 
-    // if(req.session.user) { 
-    //     if(req.session.user.role === 'admin') {
-    //         return res.redirect('/admin')
-    //     } else if (req.session.user.role === 'user') { 
-    //         return res.redirect('/user')
-    //     }
-    // } 
-    res.status(201);
-    return res.render('login', { title: 'login' });
-    next()
-})
+        if (!user) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
 
-app.use('/register', (req,res,next) => { 
-    res.status(201);
-    return res.render('register', { title: 'Register' });
-    // if(req.session.user) { 
-    //     if(req.session.user.role === 'admin') {
-    //         return res.redirect('/admin')
-    //     } else if (req.session.user.role === 'user') { 
-    //         return res.redirect('/user')
-    //     }
-    // }   
-    next()
-})
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (isMatch) {
+            // Set session
+            req.session.user = {
+                firstname: user.firstname,
+                lastname: user.lastname,
+                id: user._id,
+                role: user.role
+            };
+
+            // Save session and redirect based on role
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Session Save Error:', err);
+                    return res.status(500).json({ message: "Error saving session", error: err });
+                }
+
+                if (user.role === 'recruiter') {
+                    return res.redirect('/user');  // Redirect to the recruiter feed
+                } else {
+                    return res.redirect('/job');    // Redirect to the job feed
+                }
+            });
+        } else {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: "Error logging in", error });
+    }
+});
+
+app.get('/register', (req, res, next) => {
+    res.status(201).render('register', { title: 'Register' });
+});
 
 app.use('/logout', async (req, res) => {
-    req.session.destroy();
-    res.render('logout')
-  });
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Failed to destroy session:', err);
+            return res.status(500).send('Failed to log out. Please try again.');
+        }
 
+        // Render the logout page after session is destroyed
+        res.render('logout', { title: 'Logged Out' });
+    });
+})
 
-  app.use('/public', express.static(path.join(__dirname, 'public')));
-  app.use(express.json());
-  app.use(express.urlencoded({extended: true}));
-  
-  app.engine('handlebars', handlebarsInstance.engine);
-  app.set('view engine', 'handlebars');
-  console.log(app.get('views'))
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 export default app;

@@ -15,9 +15,18 @@ body {
     flex-direction: column;
 }
 
-h1 { 
+/* Specific styling for the h1 */
+h1 {
+    font-size: 1.5em;  /* Adjust as needed */
+    margin-bottom: 20px;
     text-align: center;
-    padding-top: 20px;
+    color: #333;
+}
+
+/* Reset label font size to ensure it's not affected by h1 styles */
+form.job-posting-form label {
+    font-size: 1em; /* Set the label font size to normal */
+    color: #333;    /* Optional: Set label color */
 }
 
 nav {
@@ -470,4 +479,110 @@ main {
 
 .remove-job-button:hover {
     background-color: #ff3333;
+}
+
+.job-posting-form {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%; /* Ensure inputs take up the full width of the form group */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+    box-sizing: border-box; /* Include padding and border in the element's width */
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.post-job-container {
+    text-align: center; /* Center the button horizontally */
+    margin-bottom: 20px; /* Add some space below the button */
+}
+
+.post-job-button {
+    display: inline-block;
+    padding: 10px 20px; /* Add padding to make the button clickable */
+    font-size: 1.2em; /* Increase font size for better visibility */
+    color: white; /* Button text color */
+    background-color: #007bff; /* Button background color */
+    text-decoration: none; /* Remove underline from the link */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.post-job-button:hover {
+    background-color: #0056b3; /* Darken background on hover */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between; /* Space buttons evenly */
+    margin-top: 10px; /* Add some space above the buttons */
+}
+
+.apply-button, .like-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex: 1;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.apply-button:hover, .like-button:hover {
+    background-color: #0056b3;
+}
+
+.like-button {
+    background-color: #28a745; /* Different color for Like button */
+}
+
+.like-button:hover {
+    background-color: #218838;
 }

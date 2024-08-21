@@ -13,6 +13,12 @@ export const createJob = async (req, res) => {
     }
 };
 
+export const renderJobForm = (req, res) => {
+    res.render('jobs/JobForm', { 
+        title: 'Create Job', 
+        showLogout: req.session && req.session.user ? true : false 
+    });
+};
 
 export const getJobs = async (req, res) => {
     try {
