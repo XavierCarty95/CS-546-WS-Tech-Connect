@@ -7,8 +7,10 @@ const applicantSchema = new mongoose.Schema({
 });
 
 const jobSchema = new mongoose.Schema({
+
     company: { type: String, required: true },
     job_description: { type: String, required: true },
+    comments: { type: [String], default: [] },
     compensation: { type: String, required: true },
     companyId: { type: String, required: true },
     mode: { type: String, required: true },
@@ -16,6 +18,7 @@ const jobSchema = new mongoose.Schema({
     posted_date: { type: Date, required: true },
     category: { type: String, required: true },
     likes: { type: Number, default: 0 },
+    dislikes: { type: Number, default: 0 },
     applicants: [applicantSchema]
 });
 
