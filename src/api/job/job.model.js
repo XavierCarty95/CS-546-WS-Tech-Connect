@@ -7,6 +7,19 @@ const applicantSchema = new mongoose.Schema({
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
+const likedSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    date_applied: { type: Date, required: true},
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+});
+
+const dislikedSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    date_applied: { type: Date, required: true},
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+});
+
+
 const jobSchema = new mongoose.Schema({
 
     company: { type: String, required: true },
@@ -19,7 +32,9 @@ const jobSchema = new mongoose.Schema({
     posted_date: { type: Date, required: true },
     category: { type: String, required: true },
     likes: { type: Number, default: 0 },
+    likedBy: [likedSchema],
     dislikes: { type: Number, default: 0 },
+    dislikedBy: [dislikedSchema],
     applicants: [applicantSchema]
 });
 

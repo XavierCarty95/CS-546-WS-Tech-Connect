@@ -563,7 +563,7 @@ main {
     justify-content: center; /* Center the button group */
 }
 
-.apply-button, .like-button {
+.apply-button, .like-button, .dislike-button {
     background-color: #007bff;
     color: #fff;
     padding: 10px 20px;
@@ -586,6 +586,14 @@ main {
 
 .like-button:hover {
     background-color: #218838;
+}
+
+.dislike-button {
+    background-color: #c91d1d; /* Different color for Dislike button */
+}
+
+.dislike-button:hover {
+    background-color: #a72828;
 }
 
 .apply-button {

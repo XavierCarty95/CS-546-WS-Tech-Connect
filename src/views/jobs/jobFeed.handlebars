@@ -15,6 +15,8 @@
     <p><strong>Mode:</strong> {{this.mode}}</p>
     <p><strong>Category:</strong> {{this.category}}</p>
     <p><strong>Posted on:</strong> {{this.posted_date}}</p>
+    <p><strong>Likes:</strong> {{this.likes}}</p>
+    <p><strong>Dislikes:</strong> {{this.dislikes}}</p>
 
     <div class="button-group">
       {{#if ../isRecruiter}}
@@ -29,7 +31,22 @@
             <button type="submit" class="apply-button">Apply Now</button>
           </form>
         {{/if}}
-        <button class="like-button">Like</button>
+        {{#if this.userHasLiked}}
+          <p>Liked!</p>
+        {{else}}
+          <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
+            <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+            <button type="submit" class="like-button">Like</button>
+          </form>
+        {{/if}}
+        {{#if this.userHasDisliked}}
+          <p>Disliked</p>
+        {{else}}
+          <form action="job/dislike/{{this._id}}" method="POST" style="display: inline;">
+            <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+            <button type="submit" class="dislike-button">Dislike</button>
+          </form>
+        {{/if}}
       {{/if}}
     </div>
   </div>

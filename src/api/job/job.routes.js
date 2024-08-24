@@ -13,5 +13,7 @@ router.get('/create', jobHandlers.renderJobForm);
 router.get("/:id", jobHandlers.getJobById);
 router.put("/:id", jobHandlers.updateJob);
 router.delete("/:id", jobHandlers.deleteJob);
+router.post("/like/:id", jobHandlers.likeJob)
+router.post("/dislike/:id", jobHandlers.dislikeJob)
 
 export default router;
