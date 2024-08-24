@@ -115,7 +115,7 @@ app.get('/', (req, res) => {
 });
 
 app.post("/register", upload.fields([{ name: 'profilePic' }, { name: 'resume' }]), userHandlers.createUser);
-router.post("users/edit/:id", upload.fields([{ name: 'profilePic' }, { name: 'resume' }]), userHandlers.updateProfile);
+app.post("/user/edit/:id", upload.fields([{ name: 'profilePic' }, { name: 'resume' }]), userHandlers.updateProfile);
 
 app.get('/login', (req, res) => {
     if (req.session.user) {

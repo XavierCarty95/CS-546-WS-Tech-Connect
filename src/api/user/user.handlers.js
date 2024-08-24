@@ -6,20 +6,6 @@ import * as validators from "../../helpers/validators.js";
 
 const saltRounds = 10;
 
-import multer from 'multer';
-
-// Configure multer storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Ensure this directory exists
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); // Append timestamp to avoid conflicts
-  }
-});
-
-// Initialize multer with the storage configuration
-
 export const createUser = async (req, res) => {
   try {
 
@@ -287,13 +273,14 @@ export const editProfile = async (req, res) => {
       lastname: currUser.lastname,
       phone: currUser.phone,
       email: currUser.email,
-      companyID: currUser.companyID,
       profilePic: currUser.profilePic,
       jobRole: currUser.jobRole,
       experience: currUser.experience,
       githubLink: currUser.githubLink,
       resume: currUser.resume,
     };
+
+    console.log(user)
 
     res.render("profilePage/editProfile", {
       title: "Edit Profile",
@@ -310,6 +297,15 @@ export const updateProfile = async (req, res) => {
   console.log(req.body)
   console.log(req.files)
 
+  const profilePic = req.files["profilePic"]
+  ? path.basename(req.files["profilePic"][0].path) // Extract only the file name
+  : null;
+
+ const resume = req.files["resume"]
+  ? path.basename(req.files["resume"][0].path) // Extract only the file name
+  : null;
+
+
   let {
     name,
     phone,
@@ -321,15 +317,6 @@ export const updateProfile = async (req, res) => {
   let firstname = name[0];
   let lastname = name[1];
 
-  const profilePic = req.files["profilePic"]
-  ? path.basename(req.files["profilePic"][0].path) // Extract only the file name
-  : null;
-
- const resume = req.files["resume"]
-  ? path.basename(req.files["resume"][0].path) // Extract only the file name
-  : null;
-
-  console.log(req.files)
   
   try {
     const update = {
@@ -346,7 +333,7 @@ export const updateProfile = async (req, res) => {
     const user = await User.findByIdAndUpdate(req.session.user.id, update, {
       new: true,
     }).lean();
-    user.save()
+  
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
