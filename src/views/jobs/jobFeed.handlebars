@@ -17,7 +17,6 @@
     <p><strong>Posted on:</strong> {{this.posted_date}}</p>
 
     <div class="button-group">
-        {{log ../isRecruiter}}
       {{#if ../isRecruiter}}
         <a href="/job/{{this._id}}/applicants" class="btn">View Applicants</a>
       {{else}}

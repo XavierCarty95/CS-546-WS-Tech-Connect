@@ -1,7 +1,10 @@
 <section class="profile">
     <div class="profile-header">
-        {{ log user.profilePic}}
-        <img src="/uploads/{{user.profilePic}}" alt="{{user.firstname}}'s Profile Picture" class="profile-pic">
+        {{#if user.profilePic}}
+            <img src="/uploads/{{user.profilePic}}" alt="{{user.firstname}}'s Profile Picture" class="profile-pic">
+        {{else}}
+            <img src="/path/to/default/profile/pic.png" alt="Default Profile Picture" class="profile-pic">
+        {{/if}}
         <h1>{{user.name}}</h1>
         <p>{{user.role}}</p>
     </div>
@@ -9,26 +12,32 @@
     <div class="profile-details">
         <h2>Profile Details</h2>
         <ul>
-            <li><strong>Phone:</strong> {{user.phone}}</li>
-            <li><strong>Email:</strong> {{user.email}}</li>
-            <li><strong>Company ID:</strong> {{user.companyID}}</li>
-            <li><strong>Job Role:</strong> {{user.jobRole}}</li>
-            <li><strong>Experience:</strong> {{user.experience}}</li>
-            <li><strong>GitHub:</strong> <a href="{{user.githubLink}}" target="_blank">{{user.githubLink}}</a></li>
-             {{#if this.resume}}
-        <p><strong>Resume:</strong> <a href="/uploads/{{user.resume}}" target="_blank">Download Resume</a></p>
-        {{else}}
-        <p><strong>Resume:</strong> Not provided</p>
-        {{/if}}
+            <li><strong>Phone:</strong> {{#if user.phone}}{{user.phone}}{{else}}Not provided{{/if}}</li>
+            <li><strong>Email:</strong> {{#if user.email}}{{user.email}}{{else}}Not provided{{/if}}</li>
+            <li><strong>Company ID:</strong> {{#if user.companyID}}{{user.companyID}}{{else}}Not provided{{/if}}</li>
+            <li><strong>Job Role:</strong> {{#if user.jobRole}}{{user.jobRole}}{{else}}Not provided{{/if}}</li>
+            <li><strong>Years Experience:</strong> {{#if user.experience}}{{user.experience}}{{else}}Not provided{{/if}}</li>
+            <li><strong>GitHub:</strong> 
+                {{#if user.githubLink}}
+                    <a href="{{user.githubLink}}" target="_blank">{{user.githubLink}}</a>
+                {{else}}
+                    Not provided
+                {{/if}}
+            </li>
+            {{#if user.resume}}
+                <p><strong>Resume:</strong> <a href="/uploads/{{user.resume}}" target="_blank">Download Resume</a></p>
+            {{else}}
+                <p><strong>Resume:</strong> Not provided</p>
+            {{/if}}
         </ul>
     </div>
 
     <div class="profile-actions">
-    <a href="/user/edit" class="btn">Edit Profile</a>
-    <form action="/user/{{user.id}}?_method=DELETE" method="POST" style="display: inline;">
-        <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete your profile?');">
-            Delete Profile
-        </button>
-    </form>
-</div>
+        <a href="/user/edit" class="btn">Edit Profile</a>
+        <form action="/user/{{user.id}}?_method=DELETE" method="POST" style="display: inline;">
+            <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete your profile?');">
+                Delete Profile
+            </button>
+        </form>
+    </div>
 </section>

@@ -2,23 +2,23 @@ import User from "./user.model.js";
 import bcrypt from "bcryptjs";
 import path from "path";
 
+import * as validators from "../../helpers/validators.js";
+
 const saltRounds = 10;
 
 export const createUser = async (req, res) => {
   try {
+
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+     // Extract the filename from the full path
+     const profilePic = req.files["profilePic"]
+     ? path.basename(req.files["profilePic"][0].path) // Extract only the file name
+     : null;
 
-       // Extract the filename from the full path
-       const profilePic = req.files["profilePic"]
-       ? path.basename(req.files["profilePic"][0].path) // Extract only the file name
-       : null;
- 
-     const resume = req.files["resume"]
-       ? path.basename(req.files["resume"][0].path) // Extract only the file name
-       : null;
+    const resume = req.files["resume"]
+     ? path.basename(req.files["resume"][0].path) // Extract only the file name
+     : null;
 
-
-       console.log(profilePic)
 
     const userData = {
       firstname: req.body.firstname,
@@ -32,8 +32,19 @@ export const createUser = async (req, res) => {
       jobRole: req.body.jobRole,
       experience: req.body.experience,
       githubLink: req.body.githubLink,
-      resume: resume
-   };
+      resume: resume,
+    };
+  
+    validators.validateFirstName(userData.firstname);
+    validators.validateLastName(userData.lastname);
+    validators.validateEmail(userData.email);
+    validators.validatePassword(userData.password);
+    validators.validateJobRole(userData.jobRole);
+    validators.validateExperience(userData.experience);
+    validators.validateGitHubLink(userData.githubLink)
+
+    console.log("All validations passed.");
+    console.log( userData.jobRole)
     // Create and save the new user
     const newUser = new User(userData);
     await newUser.save();
@@ -50,27 +61,28 @@ export const createUser = async (req, res) => {
     req.session.save(async (err) => {
       if (err) {
         console.error("Session Save Error:", err);
-        return res.status(500).json({ message: "Error saving session", error: err });
+        return res
+          .status(500)
+          .json({ message: "Error saving session", error: err });
       }
 
       const users = await User.find({}).lean(); // Await the fetching of users
 
       // Redirect based on user role
-      if (newUser.role === 'recruiter') {
-        return res.status(200).render('users/feed', {
+      if (newUser.role === "recruiter") {
+        return res.status(200).render("users/feed", {
           header: `Welcome, ${newUser.firstname}`,
-          title: 'User Feed',
+          title: "User Feed",
           candidates: users, // Assuming you want to show the list of candidates
           showLogout: true,
         });
       } else {
-        return res.render('jobs/jobFeed', { showLogout: true });
+        return res.render("jobs/jobFeed", { showLogout: true });
       }
     });
-
   } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user', error });
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Error creating user", error });
   }
 };
 
@@ -117,7 +129,6 @@ export const authenticateUser = async (req, res) => {
         if (user.role === "recruiter") {
           return res.redirect("/user"); // Redirect to the recruiter feed
         } else {
-
           return res.redirect("/job"); // Redirect to the job feed
         }
       });
@@ -134,15 +145,13 @@ export const getUsers = async (req, res) => {
   try {
     const users = await User.find({}).lean();
 
-    console.log(users[users.length - 1].profilePic)
-    res
-      .status(200)
-      .render("users/feed", {
-        header: "Users",
-        title: "User Feed",
-        candidates: users,
-        showLogout: true,
-      });
+    console.log(users[users.length - 1].profilePic);
+    res.status(200).render("users/feed", {
+      header: "Users",
+      title: "User Feed",
+      candidates: users,
+      showLogout: true,
+    });
   } catch (error) {
     res.status(500).json({ message: "Error fetching users", error });
   }
@@ -239,8 +248,6 @@ export const getProfile = async (req, res) => {
       githubLink: user.githubLink,
       resume: user.resume,
     };
-  
-    console.log(user.profilePic)
 
     res.render("profilePage/profile", {
       title: `${fullname}'s Profile`,

@@ -8,6 +8,7 @@
         <p><strong>Experience:</strong> {{this.experience}}</p>
         <p><strong>GitHub:</strong> <a href="{{this.githubLink}}" target="_blank">{{this.githubLink}}</a></p>
         <!-- Link to resume -->
+        {{log this.resume}}
         {{#if this.resume}}
         <p><strong>Resume:</strong> <a href="/uploads/{{this.resume}}" target="_blank">Download Resume</a></p>
         {{else}}
