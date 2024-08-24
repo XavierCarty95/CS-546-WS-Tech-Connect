@@ -1,25 +1,33 @@
 <section class="job-feed">
-    <h1>Job Openings</h1>
-    <!-- Post Job Button -->
-    <div class="post-job-container">
-        <a href="/job/create" class="post-job-button">Post a Job</a>
-    </div>
+  <h1>Job Openings</h1>
+  <!-- Post Job Button -->
+  <div class="post-job-container">
+    <a href="/job/create" class="post-job-button">Post a Job</a>
+  </div>
 
-    <div class="job-grid">
-        {{#each jobMock}}
-        <div class="job-card">
-            <h2>{{this.company}}</h2>
-            <p><strong>Description:</strong> {{this.job_description}}</p>
-            <p><strong>Compensation:</strong> {{this.compensation}}</p>
-            <p><strong>Mode:</strong> {{this.mode}}</p>
-            <p><strong>Category:</strong> {{this.category}}</p>
-            <p><strong>Posted on:</strong> {{this.posted_date}}</p>
-            <p><strong>Likes:</strong> {{this.likes}}</p>
-            <div class="button-group">
-                <button class="apply-button">Apply Now</button>
-                <button class="like-button">Like</button>
-            </div>
+  <div class="job-grid">
+    {{#each jobMock}}
+      <div class="job-card">
+        <h2>{{this.company}}</h2>
+        <p><strong>Description:</strong> {{this.job_description}}</p>
+        <p><strong>Compensation:</strong> {{this.compensation}}</p>
+        <p><strong>Mode:</strong> {{this.mode}}</p>
+        <p><strong>Category:</strong> {{this.category}}</p>
+        <p><strong>Posted on:</strong> {{this.posted_date}}</p>
+        <p><strong>Likes:</strong> {{this.likes}}</p>
+        <div class="button-group">
+          <form action="/savedhistory" method="POST" style="display: inline;">
+            <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+            <input
+              type="hidden"
+              name="Applied_datetime"
+              value="{{current_datetime}}"
+            />
+            <button type="submit" class="apply-button">Apply Now</button>
+          </form>
+          <button class="like-button">Like</button>
         </div>
-        {{/each}}
-    </div>
+      </div>
+    {{/each}}
+  </div>
 </section>

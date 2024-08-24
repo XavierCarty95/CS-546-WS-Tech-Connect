@@ -1,7 +1,7 @@
 <section class="edit-profile">
     <h1>Edit Profile</h1>
 
-    <form action="/profile/edit" method="POST" class="edit-profile-form">
+    <form action="/user/edit" method="POST" class="edit-profile-form">
         <div class="form-group">
             <label for="name">First Name</label>
             <input type="text" id="name" name="name" value="{{user.firstname}}" required>
@@ -54,7 +54,7 @@
 
         <div class="form-group">
             <button type="submit" class="btn">Save Changes</button>
-            <a href="/profile" class="btn btn-secondary">Cancel</a>
+            <a href="/user/profile" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </section>

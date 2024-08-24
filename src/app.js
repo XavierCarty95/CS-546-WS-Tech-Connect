@@ -6,13 +6,27 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 dotenv.config();
 import bcrypt from 'bcryptjs'
+import methodOverride from 'method-override';
 
 import exphbs from 'express-handlebars';
 import userRoutes from './api/user/user.routes.js';
 import jobRoutes from './api/job/job.routes.js';
 import savedHistoryRoutes from './api/saved_history/saved_history.routes.js';
-import profileRoutes from './api/profile/profileRoutes.js';
 import User from "./api/user/user.model.js";
+import * as  userHandlers from "./api/user/user.handlers.js"
+import multer from 'multer';
+
+// Configure multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Ensure this directory exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 import connectDB from './db.js';
 import path from 'path';
@@ -29,6 +43,8 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
 
 // Session middleware should be here, before routes
 app.use(
@@ -45,10 +61,13 @@ app.use(
     })
 );
 
-// Log session info
+
 app.use((req, res, next) => {
     console.log('Session:', req.session);
     console.log('Session ID:', req.sessionID);
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
     next();
 });
 
@@ -66,7 +85,6 @@ function isAuthenticated(req, res, next) {
 app.use('/user',  isAuthenticated, userRoutes);
 app.use('/job', isAuthenticated, jobRoutes);
 app.use('/savedhistory', isAuthenticated, savedHistoryRoutes);
-app.use('/profile', isAuthenticated, profileRoutes);
 
 // View setup
 app.set('views', path.join(__dirname, 'views'));
@@ -90,6 +108,9 @@ app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
+app.post("/register", upload.fields([{ name: 'profilePic' }, { name: 'resume' }]), userHandlers.createUser);
+
+
 app.get('/login', (req, res) => {
     if (req.session.user) {
         if (req.session.user.role == 'recruiter') {
@@ -107,6 +128,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
+        console.log("It came here")
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -152,7 +174,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/register', (req, res, next) => {
+app.get('/register', (req, res) => {
     res.status(201).render('register', { title: 'Register' });
 });
 

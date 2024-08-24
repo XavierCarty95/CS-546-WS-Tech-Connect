@@ -7,7 +7,13 @@ export const createJob = async (req, res) => {
         const jobData = req.body;
         const newJob = new Job(jobData);
         await newJob.save();
-        res.status(201).json(newJob);
+
+        const jobs = await Job.find({}).lean();
+        res.status(200).render('jobs/jobFeed', { 
+            title: 'Job Feed',
+            jobMock: jobs,
+            showLogout: true
+        })
     } catch (error) {
         res.status(500).json({ message: 'Error creating job', error });
     }
@@ -22,12 +28,13 @@ export const renderJobForm = (req, res) => {
 
 export const getJobs = async (req, res) => {
     try {
-        const jobs = await Job.find();
+        const jobs = await Job.find({}).lean();
+       
         res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
-            jobMock: jobMock,
-            showLogout: true
-        })
+            jobMock: jobs, // Pass the entire jobs array
+            showLogout: true,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching jobs', error });
     }

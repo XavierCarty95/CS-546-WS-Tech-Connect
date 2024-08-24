@@ -1,6 +1,6 @@
 <section class="profile">
     <div class="profile-header">
-        <img src="{{user.profilePic}}" alt="{{user.name}}'s Profile Picture" class="profile-pic">
+        <img src="{{user.profilePic}}" alt="{{user.firstname}}'s Profile Picture" class="profile-pic">
         <h1>{{user.name}}</h1>
         <p>{{user.role}}</p>
     </div>
@@ -21,7 +21,11 @@
     </div>
 
     <div class="profile-actions">
-        <a href="/profile/edit" class="btn">Edit Profile</a>
-        <a href="/logout" class="btn btn-logout">Logout</a>
-    </div>
+    <a href="/user/edit" class="btn">Edit Profile</a>
+    <form action="/user/{{user.id}}?_method=DELETE" method="POST" style="display: inline;">
+        <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete your profile?');">
+            Delete Profile
+        </button>
+    </form>
+</div>
 </section>

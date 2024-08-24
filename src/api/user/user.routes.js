@@ -22,8 +22,11 @@ const router = express.Router();
 router.post("/register", upload.fields([{ name: 'profilePic' }, { name: 'resume' }]), userHandlers.createUser);
 
 router.post("/login", userHandlers.authenticateUser);
+router.post("/edit", userHandlers.updateProfile);
 
 router.get("/", userHandlers.getUsers);
+router.get("/profile", userHandlers.getProfile);
+router.get("/edit", userHandlers.editProfile);
 
 router.get("/:id", userHandlers.getUserById);
 router.put("/:id", userHandlers.updateUser);

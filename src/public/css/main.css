@@ -558,8 +558,9 @@ main {
 
 .button-group {
     display: flex;
-    justify-content: space-between; /* Space buttons evenly */
+    gap: 10px; /* Space between buttons */
     margin-top: 10px; /* Add some space above the buttons */
+    justify-content: center; /* Center the button group */
 }
 
 .apply-button, .like-button {
@@ -570,9 +571,9 @@ main {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    flex: 1;
-    margin-right: 10px;
+    flex: 1; /* Let the buttons grow to take equal space */
     text-align: center;
+    max-width: 200px; /* Optional: Set a maximum width to prevent the buttons from stretching too far */
 }
 
 .apply-button:hover, .like-button:hover {
@@ -585,4 +586,40 @@ main {
 
 .like-button:hover {
     background-color: #218838;
+}
+
+.apply-button {
+    margin-right: 10px;
+}
+
+/* Profile Button */
+.btn-profile {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.btn-profile:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete {
+    background-color: #dc3545; /* Red background for delete */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #c82333; /* Darker red on hover */
 }
