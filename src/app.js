@@ -63,8 +63,8 @@ function isAuthenticated(req, res, next) {
         return res.redirect('/login');
     }
 }
-app.use('/user', isAuthenticated,  userRoutes);
-app.use('/job',isAuthenticated, jobRoutes);
+app.use('/user',  isAuthenticated, userRoutes);
+app.use('/job', isAuthenticated, jobRoutes);
 app.use('/savedhistory', isAuthenticated, savedHistoryRoutes);
 app.use('/profile', isAuthenticated, profileRoutes);
 

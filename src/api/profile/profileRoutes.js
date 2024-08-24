@@ -1,44 +1,24 @@
 import express from "express";
+import * as profileHandler from "./profileHandlers.js"
+
+import multer from 'multer';
+
+// Configure multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Ensure this directory exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 const router = express.Router();
 
-router.get("/", (req, res) => { 
-    const user = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '123-456-7890',
-        profilePic: '/public/images/dog.jpg',
-        companyID: 'COMP1234',
-        jobRole: 'Software Developer',
-        experience: '5 years',
-        githubLink: 'https://github.com/johndoe',
-        role: 'Candidate'
-    };
+router.get("/", profileHandler.renderProfile);
+router.get("/edit", profileHandler.editProfile);
 
-    res.status(200).render('profilePage/profile', { 
-        title: 'Profile', 
-        user, 
-        showLogout: true
-    });
-   
-});
-
-router.get('/edit', (req, res) => {
-    // Example user data - replace this with actual user data
-    const user = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '123-456-7890',
-        jobRole: 'Software Developer',
-        profilePic: '/public/images/dog.jpg',
-        experience: '5 years',
-        githubLink: 'https://github.com/johndoe',
-    };
-
-    res.render('profilePage/editProfile', { 
-        title: 'Edit Profile', 
-        user, 
-        showLogout: true
-    });
-});
+router.post("/edit", profileHandler.updateProfile);
 
 export default router;

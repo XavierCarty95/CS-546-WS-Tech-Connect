@@ -8,12 +8,15 @@
     <div class="profile-details">
         <h2>Profile Details</h2>
         <ul>
-            <li><strong>Email:</strong> {{user.email}}</li>
             <li><strong>Phone:</strong> {{user.phone}}</li>
+            <li><strong>Email:</strong> {{user.email}}</li>
             <li><strong>Company ID:</strong> {{user.companyID}}</li>
             <li><strong>Job Role:</strong> {{user.jobRole}}</li>
             <li><strong>Experience:</strong> {{user.experience}}</li>
             <li><strong>GitHub:</strong> <a href="{{user.githubLink}}" target="_blank">{{user.githubLink}}</a></li>
+            {{#if user.resume}}
+                <li><strong>Resume: [TO IMPLEMENT]</strong> </li>
+            {{/if}}
         </ul>
     </div>
 

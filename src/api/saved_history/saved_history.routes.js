@@ -1,13 +1,10 @@
 import express from "express";
-import {
-  createSavedHistory,
-  getAllSavedHistories,
-} from "./saved_history.handlers.js";
+import * as savedHistory from "./saved_history.handlers.js";
 
 const router = express.Router();
 
-router.post("/", createSavedHistory);
+router.post("/", savedHistory.createSavedHistory);
 
-router.get("/", getAllSavedHistories);
+router.get("/", savedHistory.getAllSavedHistories);
 
 export default router;
