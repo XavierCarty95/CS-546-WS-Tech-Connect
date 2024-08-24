@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const applicantSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true },
-    resume: { type: String, required: true }
+    date_applied: { type: Date, required: true},
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
 const jobSchema = new mongoose.Schema({

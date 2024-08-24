@@ -7,6 +7,7 @@ import * as jobHandlers from "./job.handlers.js";
 const router = express.Router();
 
 router.post("/", jobHandlers.createJob);
+router.post("/apply/:id", jobHandlers.applyJob)
 router.get("/", jobHandlers.getJobs);
 router.get('/create', jobHandlers.renderJobForm);
 router.get("/:id", jobHandlers.getJobById);

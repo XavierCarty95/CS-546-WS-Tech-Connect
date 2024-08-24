@@ -4,33 +4,22 @@ import helmet from 'helmet';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import session from 'express-session';
-dotenv.config();
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
 import methodOverride from 'method-override';
-
+import fs from 'fs';
 import exphbs from 'express-handlebars';
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import connectDB from './db.js';
+
 import userRoutes from './api/user/user.routes.js';
 import jobRoutes from './api/job/job.routes.js';
 import savedHistoryRoutes from './api/saved_history/saved_history.routes.js';
-import User from "./api/user/user.model.js";
-import * as  userHandlers from "./api/user/user.handlers.js"
-import multer from 'multer';
+import User from './api/user/user.model.js';
+import * as userHandlers from "./api/user/user.handlers.js";
 
-// Configure multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Ensure this directory exists
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage });
-
-import connectDB from './db.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,8 +34,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
-// Session middleware should be here, before routes
+// Configure multer
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadsDir); // Absolute path
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname); // Avoid conflicts
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// Session middleware
 app.use(
     session({
         name: 'TechConnect',
@@ -61,18 +66,18 @@ app.use(
     })
 );
 
-
 app.use((req, res, next) => {
-    console.log('Session:', req.session);
-    console.log('Session ID:', req.sessionID);
+    // console.log('Session:', req.session);
+    // console.log('Session ID:', req.sessionID);
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
     next();
 });
 
-// Rewrite unsupported methods middleware
-// app.use(rewriteUnsupportedBrowserMethods);
+// Serve static files
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
 
 // Routes
 function isAuthenticated(req, res, next) {
@@ -82,7 +87,8 @@ function isAuthenticated(req, res, next) {
         return res.redirect('/login');
     }
 }
-app.use('/user',  isAuthenticated, userRoutes);
+
+app.use('/user', isAuthenticated, userRoutes);
 app.use('/job', isAuthenticated, jobRoutes);
 app.use('/savedhistory', isAuthenticated, savedHistoryRoutes);
 
@@ -103,13 +109,12 @@ const handlebarsInstance = exphbs.create({
 app.engine('handlebars', handlebarsInstance.engine);
 app.set('view engine', 'handlebars');
 
-// Routes for login, register, and logout
+// Other routes
 app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
 app.post("/register", upload.fields([{ name: 'profilePic' }, { name: 'resume' }]), userHandlers.createUser);
-
 
 app.get('/login', (req, res) => {
     if (req.session.user) {
@@ -128,7 +133,6 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-        console.log("It came here")
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -144,7 +148,6 @@ app.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (isMatch) {
-            // Set session
             req.session.user = {
                 firstname: user.firstname,
                 lastname: user.lastname,
@@ -152,10 +155,8 @@ app.post('/login', async (req, res) => {
                 role: user.role
             };
 
-            // Save session and redirect based on role
             req.session.save((err) => {
                 if (err) {
-                    console.error('Session Save Error:', err);
                     return res.status(500).json({ message: "Error saving session", error: err });
                 }
 
@@ -169,8 +170,7 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: "Error logging in", error });
+        res.status(500).json({ message: "Error logging in", error: error.message });
     }
 });
 
@@ -181,15 +181,11 @@ app.get('/register', (req, res) => {
 app.use('/logout', async (req, res) => {
     req.session.destroy(err => {
         if (err) {
-            console.error('Failed to destroy session:', err);
             return res.status(500).send('Failed to log out. Please try again.');
         }
 
-        // Render the logout page after session is destroyed
         res.render('logout', { title: 'Logged Out' });
     });
-})
-
-app.use('/public', express.static(path.join(__dirname, 'public')));
+});
 
 export default app;

@@ -1,12 +1,19 @@
 <div class="card-grid">
-            {{#each candidates}} 
-            <div class="card">
-                <img src="{{this.profilePic}}" alt="{{this.firstname}} {{this.lastname}}" class="profile-pic">
-                <h3>{{this.firstname}} {{this.lastname}}</h3> 
-                <p><strong>Job Role:</strong> {{this.jobRole}}</p> 
-                <p><strong>Experience:</strong> {{this.experience}}</p>
-                <p><strong>GitHub:</strong> <a href="{{this.githubLink}}" target="_blank">{{this.githubLink}}</a></p> 
-               <a href="/user/{{this._id}}" class="btn-profile">View Profile</a>
-            </div>
-            {{/each}}
-        </div>
+    {{#each candidates}} 
+    <div class="card">
+        {{log this.profilePic}}
+        <img src="/uploads/{{this.profilePic}}" alt="{{this.firstname}} {{this.lastname}}" class="profile-pic">
+        <h3>{{this.firstname}} {{this.lastname}}</h3> 
+        <p><strong>Job Role:</strong> {{this.jobRole}}</p> 
+        <p><strong>Experience:</strong> {{this.experience}}</p>
+        <p><strong>GitHub:</strong> <a href="{{this.githubLink}}" target="_blank">{{this.githubLink}}</a></p>
+        <!-- Link to resume -->
+        {{#if this.resume}}
+        <p><strong>Resume:</strong> <a href="/uploads/{{this.resume}}" target="_blank">Download Resume</a></p>
+        {{else}}
+        <p><strong>Resume:</strong> Not provided</p>
+        {{/if}}
+        <a href="/user/{{this._id}}" class="btn-profile">View Profile</a>
+    </div>
+    {{/each}}
+</div>

@@ -1,28 +1,27 @@
 import SavedHistory from './saved_history.model.js';
 
-// Create a new saved history entry
 export const createSavedHistory = async (req, res) => {
   try {
     // Assuming user info is stored in the session
-    const applicantName = req.session.user.firstname; // Adjust according to how user info is stored in your session
+    const applicantName = req.session.user.firstname;
 
     // Get other data from the request body
     const { Job_id } = req.body;
-
-    console.log(req.body)
 
     // Create a new SavedHistory record
     const newHistory = new SavedHistory({
       Applicant_Name: applicantName, // Set the applicant name from session
       Job_id,
       Applied_datetime: new Date(),
+      user_id: req.session.user.id
     });
 
-    console.log("Printed")
-    // Save the record to the database
+    console.log("Hey" ,req.session.user.id)
+
+    console.log(newHistory)
     await newHistory.save();
 
-    // Respond with the created history record
+
     res.status(201).json(newHistory);
   } catch (error) {
     // Handle any errors that occur during the process
@@ -31,10 +30,10 @@ export const createSavedHistory = async (req, res) => {
 };
 
 
-// Get all saved history entries
 export const getAllSavedHistories = async (req, res) => {
   try {
     const histories = await SavedHistory.find({}).lean();
+    console.log("Hey" ,req.session.user.id)
 
      console.log(histories)
     res.status(200).render('saved_jobs/savedJobs', { histories, showLogout: true });

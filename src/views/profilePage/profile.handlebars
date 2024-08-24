@@ -1,6 +1,7 @@
 <section class="profile">
     <div class="profile-header">
-        <img src="{{user.profilePic}}" alt="{{user.firstname}}'s Profile Picture" class="profile-pic">
+        {{ log user.profilePic}}
+        <img src="/uploads/{{user.profilePic}}" alt="{{user.firstname}}'s Profile Picture" class="profile-pic">
         <h1>{{user.name}}</h1>
         <p>{{user.role}}</p>
     </div>
@@ -14,9 +15,11 @@
             <li><strong>Job Role:</strong> {{user.jobRole}}</li>
             <li><strong>Experience:</strong> {{user.experience}}</li>
             <li><strong>GitHub:</strong> <a href="{{user.githubLink}}" target="_blank">{{user.githubLink}}</a></li>
-            {{#if user.resume}}
-                <li><strong>Resume: [TO IMPLEMENT]</strong> </li>
-            {{/if}}
+             {{#if this.resume}}
+        <p><strong>Resume:</strong> <a href="/uploads/{{user.resume}}" target="_blank">Download Resume</a></p>
+        {{else}}
+        <p><strong>Resume:</strong> Not provided</p>
+        {{/if}}
         </ul>
     </div>
 
