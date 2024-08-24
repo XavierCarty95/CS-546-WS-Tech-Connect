@@ -7,4 +7,6 @@ router.post("/", savedHistory.createSavedHistory);
 
 router.get("/", savedHistory.getAllSavedHistories);
 
+router.delete("/:id", savedHistory.deleteSavedPost)
+
 export default router;

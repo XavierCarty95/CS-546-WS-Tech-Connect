@@ -1,14 +1,18 @@
- {{#if histories.length}}
-            <ul class="saved-jobs-list">
-                {{#each histories}}
-                <li class="saved-job-card">
-                    <h2>Applicant: {{this.Applicant_Name}}</h2>
-                    <p><strong>Job ID:</strong> {{this.Job_id}}</p>
-                    <p><strong>Applied On:</strong> {{this.Applied_datetime}}</p>
-                    <button class="remove-job-button">Remove</button>
-                </li>
-                {{/each}}
-            </ul>
-        {{else}}
-            <p>No saved jobs found.</p>
-        {{/if}}
+{{#if histories.length}}
+    <ul class="saved-jobs-list">
+        {{#each histories}}
+        <li class="saved-job-card">
+            <h2>Applicant: {{this.Applicant_Name}}</h2>
+            <p><strong>Job ID:</strong> {{this.Job_id}}</p>
+            <p><strong>Applied On:</strong> {{this.Applied_datetime}}</p>
+            <form action="/savedHistory/{{this._id}}?_method=DELETE" method="POST" style="display: inline;">
+                <button type="submit" class="remove-job-button" onclick="return confirm('Are you sure you want to delete this job application?');">
+                    Remove
+                </button>
+            </form>
+        </li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>No saved jobs found.</p>
+{{/if}}

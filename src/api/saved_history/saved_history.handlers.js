@@ -7,7 +7,7 @@ export const createSavedHistory = async (req, res) => {
     const applicantName = req.session.user.firstname; // Adjust according to how user info is stored in your session
 
     // Get other data from the request body
-    const { Job_id, Applied_datetime } = req.body;
+    const { Job_id } = req.body;
 
     console.log(req.body)
 
@@ -35,10 +35,26 @@ export const createSavedHistory = async (req, res) => {
 export const getAllSavedHistories = async (req, res) => {
   try {
     const histories = await SavedHistory.find({}).lean();
-    console.log(histories)
-    res.status(200).render('saved_jobs/savedJobs', { histories, showLogout: true })
+
+     console.log(histories)
+    res.status(200).render('saved_jobs/savedJobs', { histories, showLogout: true });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching saved histories', error });
   }
 };
 
+export const deleteSavedPost = async (req, res) => {
+  try {
+    const post = await SavedHistory.findByIdAndDelete(req.params.id);
+    const histories = await SavedHistory.find({}).lean();
+    res.status(200).render('saved_jobs/savedJobs', { histories, showLogout: true })
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+
+
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting user", error });
+  }
+};
