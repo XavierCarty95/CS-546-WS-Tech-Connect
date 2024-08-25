@@ -1,6 +1,6 @@
 import express from "express";
 import * as jobHandlers from "./job.handlers.js";
-
+import * as savedHistory from "../saved_history/saved_history.handlers.js";
 
 
 
@@ -12,6 +12,7 @@ router.post("/", jobHandlers.createJob);
 router.post("/apply/:id", jobHandlers.applyJob)
 router.get('/create', jobHandlers.renderJobForm);
 router.get('/:id/applicants', jobHandlers.getApplicants)
+router.post('/:id/saved_history/saveApplicant/', savedHistory.saveApplicant)
 
 router.get("/:id", jobHandlers.getUpdatedJob);
 router.put("/:id", jobHandlers.updateJob);

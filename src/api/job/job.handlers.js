@@ -180,13 +180,14 @@ export const applyJob = async (req, res) => {
         const isRecruiter = isUserRecruiter(req.session);
 
 
-        res.status(200).render('jobs/jobFeed', { 
+        /*res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showPostButton: isRecruiter,
             showLogout: true,
             isRecruiter: isRecruiter,
-        })
+        })*/
+        res.redirect('/job')
 
     } catch (error) {
         res.status(500).json({ message: 'Error applying to job', error: error.message });
@@ -204,13 +205,15 @@ export const deleteJob = async (req, res) => {
         const isRecruiter = isUserRecruiter(req.session);
 
 
-        res.status(200).render('jobs/jobFeed', { 
+        /*res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showPostButton: isRecruiter,
             showLogout: true,
             isRecruiter: isRecruiter,
-        })
+        })*/
+        res.redirect('/job')
+
     } catch (error) {
         res.status(500).json({ message: 'Error deleting job', error });
     }
@@ -278,13 +281,14 @@ export const likeJob = async (req, res) => {
         const isRecruiter = isUserRecruiter(req.session);
 
 
-        res.status(200).render('jobs/jobFeed', { 
+        /*res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showPostButton: isRecruiter,
             showLogout: true,
             isRecruiter: isRecruiter,
-        })
+        })*/
+        res.redirect('/job')
 
     } catch (error) {
         res.status(500).json({ message: 'Error disliking job', error: error.message });
@@ -391,13 +395,14 @@ export const addComments =  async (req, res) => {
         const isRecruiter = isUserRecruiter(req.session);
         const jobs = await Job.find({}).lean();
 
-        res.status(200).render('jobs/jobFeed', { 
+        /*res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showPostButton: isRecruiter,
             showLogout: true,
             isRecruiter: isRecruiter,
-        })
+        })*/
+        res.redirect('/job')
     } catch (error) {
         res.status(500).json({ message: 'Error posting comment', error });
     }

@@ -7,7 +7,9 @@
                     <p><strong>Name:</strong> {{this.name}}</p>
                     <p><strong>Date Applied:</strong> {{this.date_applied}}</p>
 
-                    <form action="/saveApplicant/{{this._id}}" method="POST" style="display: inline;">
+                    <form action="saved_history/saveApplicant/" method="POST" style="display: inline;">
+                        <input type="hidden" name="applicant_id" value="{{this._id}}" />
+                        <input type="hidden" name="Job_id" value="{{this.job_id}}" />
                         <button type="submit" class="btn-save">Save Applicant</button>
                     </form>
                 </li>

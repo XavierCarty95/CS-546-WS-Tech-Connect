@@ -57,3 +57,15 @@ export const deleteSavedPost = async (req, res) => {
     res.status(500).json({ message: "Error deleting user", error });
   }
 };
+
+export const saveApplicant = async (req, res) => {
+  console.log("IN SAVE")
+  console.log("req.body", req.body)
+  const uhh = await SavedHistory.findById(req.body.applicant_id)
+  console.log("uhhh", uhh)
+  /*const job = await SavedHistory.findById(req.body.Job_id)
+  console.log("JOBB", job)
+  const applicant = await SavedHistory.findById(req.body.applicant.user_id)
+  console.log("APPLICANT", applicant)*/
+
+}
