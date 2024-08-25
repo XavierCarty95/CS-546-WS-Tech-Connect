@@ -1,0 +1,18 @@
+    <div>
+    {{#if applicants.length}}
+        <ul>
+            {{#each applicants}}
+                <li>
+                    <p><strong>Name:</strong> {{this.name}}</p>
+                    <p><strong>Date Applied:</strong> {{this.date_applied}}</p>
+
+                    <form action="/saveApplicant/{{this._id}}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-save">Save Applicant</button>
+                    </form>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No applicants found.</p>
+    {{/if}}
+    </div>

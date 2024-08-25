@@ -40,16 +40,16 @@ export const getJobs = async (req, res) => {
                 applicant.user_id.toString() === userId.toString()
             );
         });
-        jobs.forEach(job => {
-            job.userHasLiked = job.likedBy.some(like => 
-                like.user_id.toString() === userId.toString()
-            );
-        });
-        jobs.forEach(job => {
-            job.userHasDisliked = job.dislikedBy.some(dislike => 
-                dislike.user_id.toString() === userId.toString()
-            );
-        });
+        // jobs.forEach(job => {
+        //     job.userHasLiked = job.likedBy.some(like => 
+        //         like.user_id.toString() === userId.toString()
+        //     );
+        // });
+        // jobs.forEach(job => {
+        //     job.userHasDisliked = job.dislikedBy.some(dislike => 
+        //         dislike.user_id.toString() === userId.toString()
+        //     );
+        // });
 
         const isRecruiter = req.session.user.role === 'recruiter';
 
@@ -63,7 +63,7 @@ export const getJobs = async (req, res) => {
             isRecruiter: isRecruiter // Pass the isRecruiter value to the template
         });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching jobs', error });
+        res.status(500).json({ message: 'Error fetching jobs', error: error.message });
     }
 };
 
@@ -239,4 +239,15 @@ export const dislikeJob = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error disliking job', error: error.message });
     }
+};
+
+export const getApplicants  = async (req, res) => {
+    const job = await Job.findById(req.params.id).lean()
+
+    const applicants = job.applicants
+
+    res.status(200).render('jobs/applicants', { 
+        applicants,
+        showLogout: req.session.user.id
+    });
 };

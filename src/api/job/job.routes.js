@@ -10,6 +10,7 @@ router.post("/", jobHandlers.createJob);
 router.post("/apply/:id", jobHandlers.applyJob)
 router.get("/", jobHandlers.getJobs);
 router.get('/create', jobHandlers.renderJobForm);
+router.get('/:id/applicants', jobHandlers.getApplicants)
 router.get("/:id", jobHandlers.getJobById);
 router.put("/:id", jobHandlers.updateJob);
 router.delete("/:id", jobHandlers.deleteJob);
