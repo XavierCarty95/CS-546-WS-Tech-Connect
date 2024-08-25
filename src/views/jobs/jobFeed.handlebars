@@ -7,7 +7,17 @@
     {{/if}}
   </div>
 
-{{#each jobMock}}
+  <div class="search-box">
+    <form action="/job" method="GET">
+      <input type="text" name="query" placeholder="Search by name">
+      <button type="submit" class="search-button">Search</button>
+    </form>
+  </div>
+
+  {{#if emptyFilter}}
+  <p>No results found</p>
+  {{else}}
+  {{#each jobMock}}
   <div class="job-card">
     <h2>{{this.company}}</h2>
     <p><strong>Description:</strong> {{this.job_description}}</p>
@@ -20,36 +30,37 @@
 
     <div class="button-group">
       {{#if ../isRecruiter}}
-        <a href="/job/{{this._id}}/applicants" class="btn">View Applicants</a>
+      <a href="/job/{{this._id}}/applicants" class="btn">View Applicants</a>
       {{else}}
-        {{#if this.userHasApplied}}
-          <p>Applied</p>
-        {{else}}
-          <form action="job/apply/{{this._id}}" method="POST" style="display: inline;">
-            <input type="hidden" name="Job_id" value="{{this.job_id}}" />
-            <input type="hidden" name="Applied_datetime" value="{{../current_datetime}}" />
-            <button type="submit" class="apply-button">Apply Now</button>
-          </form>
-        {{/if}}
-        {{#if this.userHasLiked}}
-          <p>Liked!</p>
-        {{else}}
-          <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
-            <input type="hidden" name="Job_id" value="{{this.job_id}}" />
-            <button type="submit" class="like-button">Like</button>
-          </form>
-        {{/if}}
-        {{#if this.userHasDisliked}}
-          <p>Disliked</p>
-        {{else}}
-          <form action="job/dislike/{{this._id}}" method="POST" style="display: inline;">
-            <input type="hidden" name="Job_id" value="{{this.job_id}}" />
-            <button type="submit" class="dislike-button">Dislike</button>
-          </form>
-        {{/if}}
+      {{#if this.userHasApplied}}
+      <p>Applied</p>
+      {{else}}
+      <form action="job/apply/{{this._id}}" method="POST" style="display: inline;">
+        <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+        <input type="hidden" name="Applied_datetime" value="{{../current_datetime}}" />
+        <button type="submit" class="apply-button">Apply Now</button>
+      </form>
+      {{/if}}
+      {{#if this.userHasLiked}}
+      <p>Liked!</p>
+      {{else}}
+      <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
+        <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+        <button type="submit" class="like-button">Like</button>
+      </form>
+      {{/if}}
+      {{#if this.userHasDisliked}}
+      <p>Disliked</p>
+      {{else}}
+      <form action="job/dislike/{{this._id}}" method="POST" style="display: inline;">
+        <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+        <button type="submit" class="dislike-button">Dislike</button>
+      </form>
+      {{/if}}
       {{/if}}
     </div>
   </div>
-{{/each}}
+  {{/each}}
+  {{/if}}
   </div>
 </section>

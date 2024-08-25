@@ -35,6 +35,16 @@ export const getJobs = async (req, res) => {
         const userId = req.session.user.id;
         const jobs = await Job.find({}).lean();
 
+        let filterJobs = [];
+        if (req.query.query && req.query.query.trim() !== "") {
+            filterJobs = jobs.filter(job =>
+                job.company.toLowerCase().includes(req.query.query.trim().toLowerCase())
+            );
+        } else {
+            filterJobs = jobs;
+            //console.log(filterJobs);
+        }
+
         jobs.forEach(job => {
             job.userHasApplied = job.applicants.some(applicant => 
                 applicant.user_id.toString() === userId.toString()
@@ -57,10 +67,11 @@ export const getJobs = async (req, res) => {
 
         res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
-            jobMock: jobs,
+            jobMock: filterJobs,
             showPostButton: isRecruiter,
             showLogout: true,
-            isRecruiter: isRecruiter // Pass the isRecruiter value to the template
+            isRecruiter: isRecruiter,
+            emptyFilter: filterJobs.length === 0
         });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching jobs', error });

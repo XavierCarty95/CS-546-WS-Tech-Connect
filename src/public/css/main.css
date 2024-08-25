@@ -556,6 +556,26 @@ main {
     background-color: #0056b3; /* Darken background on hover */
 }
 
+.search-box {
+    margin: 10px;
+    border-radius: 60px;
+    background-color: lightgrey;
+    display: flex;
+    max-width: 1200px;
+}
+.search-box input{
+    width: 1000px;
+    margin: 20px;
+    font-size: 20px;
+    border-radius: 5px;
+    background: transparent;
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 10px 10px;
+    cursor: text;
+}
+
 .button-group {
     display: flex;
     gap: 10px; /* Space between buttons */
@@ -563,7 +583,7 @@ main {
     justify-content: center; /* Center the button group */
 }
 
-.apply-button, .like-button, .dislike-button {
+.apply-button, .like-button, .dislike-button, .search-button {
     background-color: #007bff;
     color: #fff;
     padding: 10px 20px;
@@ -576,7 +596,11 @@ main {
     max-width: 200px; /* Optional: Set a maximum width to prevent the buttons from stretching too far */
 }
 
-.apply-button:hover, .like-button:hover {
+.apply-button {
+    margin-right: 10px;
+}
+
+.apply-button:hover{
     background-color: #0056b3;
 }
 
@@ -596,9 +620,17 @@ main {
     background-color: #a72828;
 }
 
-.apply-button {
-    margin-right: 10px;
+.search-button {
+    background-color: #808080; /* Different color for Search button */
+    border-radius: 60px;
+    width: 100px;
+    padding: flex;
 }
+
+.search-button:hover {
+    background-color: #696565;
+}
+
 
 /* Profile Button */
 .btn-profile {
