@@ -1,13 +1,14 @@
-    <div>
+<div>
+    <h1> Applicants </h1>
     {{#if applicants.length}}
-        <ul>
+        <ul class="applicant-list">
             {{#each applicants}}
-                <li>
+                <li class="applicant-card">
                     <p><strong>Name:</strong> {{this.name}}</p>
                     <p><strong>Date Applied:</strong> {{this.date_applied}}</p>
 
                     <form action="/saveApplicant/{{this._id}}" method="POST" style="display: inline;">
-                        <button type="submit" class="btn btn-save">Save Applicant</button>
+                        <button type="submit" class="btn-save">Save Applicant</button>
                     </form>
                 </li>
             {{/each}}
@@ -15,4 +16,4 @@
     {{else}}
         <p>No applicants found.</p>
     {{/if}}
-    </div>
+</div>

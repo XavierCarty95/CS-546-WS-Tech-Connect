@@ -654,3 +654,43 @@ main {
 .btn-login:hover {
     background-color: #0056b3;
 }
+
+/* Applicant List Styles */
+.applicant-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.applicant-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.applicant-card p {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.applicant-card strong {
+    color: #555;
+}
+
+.btn-save {
+    display: inline-block;
+    background-color: #28a745; /* Green background */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-save:hover {
+    background-color: #218838; /* Darker green on hover */
+}
