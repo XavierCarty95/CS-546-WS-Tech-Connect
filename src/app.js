@@ -18,6 +18,7 @@ import jobRoutes from './api/job/job.routes.js';
 import savedHistoryRoutes from './api/saved_history/saved_history.routes.js';
 import User from './api/user/user.model.js';
 import * as userHandlers from "./api/user/user.handlers.js";
+import * as validation from "./helpers/validators.js"
 
 dotenv.config();
 
@@ -67,8 +68,6 @@ app.use(
 );
 
 app.use((req, res, next) => {
-    // console.log('Session:', req.session);
-    // console.log('Session ID:', req.sessionID);
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
@@ -120,14 +119,14 @@ app.post("/user/edit/:id", upload.fields([{ name: 'profilePic' }, { name: 'resum
 app.get('/login', (req, res) => {
     if (req.session.user) {
         if (req.session.user.role == 'recruiter') {
-            return res.redirect('/user'); // Redirect to the user feed
+            return res.redirect('/user');
         } else {
-            return res.redirect('/job'); // Redirect to the job feed
+            return res.redirect('/job');
         }
     } else {
         res.render('login', { 
             title: 'Login',
-            showLogout: false // Only show "Tech Connect" in the navbar
+            showLogout: false
         });
     }
 });
@@ -135,6 +134,8 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        validation.validateEmail(email)
+        validation.validatePassword(password)
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
@@ -171,6 +172,7 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
     } catch (error) {
+        console.log(error.message)
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
 });
@@ -184,7 +186,6 @@ app.use('/logout', async (req, res) => {
         if (err) {
             return res.status(500).send('Failed to log out. Please try again.');
         }
-
         res.render('logout', { title: 'Logged Out' });
     });
 });
