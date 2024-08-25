@@ -726,3 +726,9 @@ main {
 .btn-save:hover {
     background-color: #218838; /* Darker green on hover */
 }
+
+.error-message {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 5px;
+}

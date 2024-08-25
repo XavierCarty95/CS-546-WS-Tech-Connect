@@ -81,7 +81,6 @@ export const createUser = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Error creating user:", error);
     res.status(500).json({ message: "Error creating user", error });
   }
 };
@@ -108,7 +107,6 @@ export const authenticateUser = async (req, res) => {
     console.log("Password Match:", isMatch);
 
     if (isMatch) {
-      // Set session
       req.session.user = {
         firstname: user.firstname,
         lastname: user.lastname,
@@ -116,20 +114,17 @@ export const authenticateUser = async (req, res) => {
         role: user.role,
       };
 
-      // Ensure session is saved before redirecting
       req.session.save((err) => {
         if (err) {
-          console.error("Session Save Error:", err);
           return res
             .status(500)
             .json({ message: "Error saving session", error: err });
         }
 
-        // Redirect based on user role
         if (user.role === "recruiter") {
-          return res.redirect("/user"); // Redirect to the recruiter feed
+          return res.redirect("/user");
         } else {
-          return res.redirect("/job"); // Redirect to the job feed
+          return res.redirect("/job");
         }
       });
     } else {
@@ -281,8 +276,6 @@ export const editProfile = async (req, res) => {
       resume: currUser.resume,
     };
 
-    console.log(user)
-
     res.render("profilePage/editProfile", {
       title: "Edit Profile",
       user,
@@ -295,9 +288,6 @@ export const editProfile = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  console.log(req.body)
-  console.log(req.files)
-
   const profilePic = req.files["profilePic"]
   ? path.basename(req.files["profilePic"][0].path) // Extract only the file name
   : null;
