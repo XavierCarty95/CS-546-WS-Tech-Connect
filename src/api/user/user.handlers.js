@@ -183,6 +183,7 @@ export const getUserById = async (req, res) => {
       title: `${fullname}'s Profile`,
       user: userProfile,
       showLogout: true,
+      shouldShowDelete: req.session.user.id == user._id.toString()
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching user", error });

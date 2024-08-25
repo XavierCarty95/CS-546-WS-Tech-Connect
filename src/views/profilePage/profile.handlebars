@@ -31,6 +31,7 @@
         </ul>
     </div>
 
+    {{#if shouldShowDelete}}
     <div class="profile-actions">
         <a href="/user/edit" class="btn">Edit Profile</a>
         <form action="/user/{{user.id}}?_method=DELETE" method="POST" style="display: inline;">
@@ -38,5 +39,6 @@
                 Delete Profile
             </button>
         </form>
+        {{/if}}
     </div>
 </section>
