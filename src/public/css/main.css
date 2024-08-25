@@ -557,14 +557,14 @@ main {
 }
 
 .search-box {
-    margin: 10px;
+    margin: 10px auto; /* Center align */
     border-radius: 60px;
     background-color: lightgrey;
     display: flex;
-    max-width: 1200px;
+    max-width: 800px;
 }
-.search-box input{
-    width: 1000px;
+.search-box input {
+    width: 600px;
     margin: 20px;
     font-size: 20px;
     border-radius: 5px;
