@@ -134,17 +134,15 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        // validation.validateEmail(email)
-        // validation.validatePassword(password)
 
         if (!email || !password) {
-            return res.status(400).json({ message: "Email and password are required" });
+            return res.status(400).json({ success: false, message: "Email and password are required" });
         }
 
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.render(401).json("Error", { message: "Invalid credentials", status: 404 });
+            return res.status(401).json({ success: false, message: "Invalid credentials" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -159,23 +157,20 @@ app.post('/login', async (req, res) => {
 
             req.session.save((err) => {
                 if (err) {
-                    return res.status(500).json({ message: "Error saving session", error: err });
+                    return res.status(500).json({ success: false, message: "Error saving session", error: err });
                 }
 
-                if (user.role === 'recruiter') {
-                    return res.redirect('/user');  // Redirect to the recruiter feed
-                } else {
-                    return res.redirect('/job');    // Redirect to the job feed
-                }
+                return res.json({ success: true });
             });
         } else {
-            return res.render(401).json("error", { message: "Invalid credentials", status: 401 });
+            return res.status(401).json({ success: false, message: "Invalid credentials" });
         }
     } catch (error) {
-        console.log(error.message)
-        res.status(500).render("error", { message: "Email or password incorrect", status: 404, isLogin: true });
+        console.log(error.message);
+        res.status(500).json({ success: false, message: "An error occurred. Please try again." });
     }
 });
+
 
 app.get('/register', (req, res) => {
     res.status(201).render('register', { title: 'Register' });
