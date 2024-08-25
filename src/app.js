@@ -134,8 +134,8 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        validation.validateEmail(email)
-        validation.validatePassword(password)
+        // validation.validateEmail(email)
+        // validation.validatePassword(password)
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });

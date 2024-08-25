@@ -6,20 +6,44 @@ const isUserRecruiter = (session) => session.user && session.user.role === 'recr
 
 export const createJob = async (req, res) => {
     try {
-        const newJob = new Job(req.body);
+
+        const {
+            company,
+            job_description, // Keeping the original name here
+            compensation,
+            mode,
+            category,
+            comments // If comments are being passed in `req.body`
+          } = req.body;
+          
+          // Create an updated job object, adding the posted_date
+          let job = {
+            company,
+            job_description,
+            compensation,
+            mode,
+            category,
+            comments,
+            posted_date: new Date() // Add the current date as the posted_date
+          };
+       
+        const newJob = new Job(job);
         await newJob.save();
 
-        const jobs = await Job.find({}).lean();
+           
+        const jobs = await Job.find({}).lean()
         const isRecruiter = isUserRecruiter(req.session);
+
 
         res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showPostButton: isRecruiter,
-            showLogout: true
-        });
+            showLogout: true,
+            isRecruiter: isRecruiter,
+        })
     } catch (error) {
-        res.status(500).json({ message: 'Error creating job', error });
+        res.status(500).json({ message: 'Error creating job', error: error.message });
     }
 };
 
@@ -42,7 +66,6 @@ export const getJobs = async (req, res) => {
             );
         } else {
             filterJobs = jobs;
-            //console.log(filterJobs);
         }
 
         jobs.forEach(job => {
@@ -74,7 +97,7 @@ export const getJobs = async (req, res) => {
             emptyFilter: filterJobs.length === 0
         });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching jobs', error: error.message });
+        res.status(500).render("error", {message: error.message, status: 500})
     }
 };
 
@@ -86,19 +109,46 @@ export const getJobById = async (req, res) => {
         }
         res.status(200).json(job);
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching job', error });
+        res.status(500).render("error", {message: error.message, status: 500})
+    }
+};
+
+export const getUpdatedJob = async (req, res) => {
+    try {
+
+    
+        const updatedJob = await Job.findById(req.params.id).lean()
+        console.log(updatedJob)
+        if (!updatedJob) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+        res.status(200).render("jobs/jobEdit", { job: updatedJob, showLogout: true})
+    } catch (error) {
+        res.status(500).render("error", {message: error.message, status: 500})
     }
 };
 
 export const updateJob = async (req, res) => {
     try {
+        console.log("No")
         const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedJob) {
             return res.status(404).json({ message: 'Job not found' });
         }
-        res.status(200).json(updatedJob);
+
+        const jobs = await Job.find({}).lean()
+        const isRecruiter = isUserRecruiter(req.session);
+
+
+        res.status(200).render('jobs/jobFeed', { 
+            title: 'Job Feed',
+            jobMock: jobs,
+            showPostButton: isRecruiter,
+            showLogout: true,
+            isRecruiter: isRecruiter,
+        })
     } catch (error) {
-        res.status(500).json({ message: 'Error updating job', error });
+        res.status(500).render("error", {message: error.message, status: 500})
     }
 };
 
@@ -127,12 +177,16 @@ export const applyJob = async (req, res) => {
             );
         });
 
-        /*res.status(200).render('jobs/jobFeed', { 
+        const isRecruiter = isUserRecruiter(req.session);
+
+
+        res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
-            showLogout: true
-        });*/
-        res.redirect('/job')
+            showPostButton: isRecruiter,
+            showLogout: true,
+            isRecruiter: isRecruiter,
+        })
 
     } catch (error) {
         res.status(500).json({ message: 'Error applying to job', error: error.message });
@@ -145,7 +199,18 @@ export const deleteJob = async (req, res) => {
         if (!deletedJob) {
             return res.status(404).json({ message: 'Job not found' });
         }
-        res.status(200).json({ message: 'Job deleted successfully' });
+       
+        const jobs = await Job.find({}).lean()
+        const isRecruiter = isUserRecruiter(req.session);
+
+
+        res.status(200).render('jobs/jobFeed', { 
+            title: 'Job Feed',
+            jobMock: jobs,
+            showPostButton: isRecruiter,
+            showLogout: true,
+            isRecruiter: isRecruiter,
+        })
     } catch (error) {
         res.status(500).json({ message: 'Error deleting job', error });
     }
@@ -210,12 +275,16 @@ export const likeJob = async (req, res) => {
             );
         });
 
-        /*res.status(200).render('jobs/jobFeed', { 
+        const isRecruiter = isUserRecruiter(req.session);
+
+
+        res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
-            showLogout: true
-        });*/
-        res.redirect('/job')
+            showPostButton: isRecruiter,
+            showLogout: true,
+            isRecruiter: isRecruiter,
+        })
 
     } catch (error) {
         res.status(500).json({ message: 'Error disliking job', error: error.message });
@@ -304,4 +373,32 @@ export const getApplicants  = async (req, res) => {
         applicants,
         showLogout: req.session.user.id
     });
+};
+
+export const addComments =  async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const { author, text } = req.body;
+
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        job.comments.push({ author, text });
+        await job.save();
+
+        const isRecruiter = isUserRecruiter(req.session);
+        const jobs = await Job.find({}).lean();
+
+        res.status(200).render('jobs/jobFeed', { 
+            title: 'Job Feed',
+            jobMock: jobs,
+            showPostButton: isRecruiter,
+            showLogout: true,
+            isRecruiter: isRecruiter,
+        })
+    } catch (error) {
+        res.status(500).json({ message: 'Error posting comment', error });
+    }
 };

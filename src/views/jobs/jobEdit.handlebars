@@ -1,0 +1,45 @@
+<section class="edit-job">
+    <h1>Edit Job</h1>
+
+    <form action="/job/{{job._id}}?_method=PUT" method="POST" class="edit-job-form">
+        <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company" value="{{job.company}}">
+        </div>
+
+        <div class="form-group">
+            <label for="job_description">Job Description</label>
+            <textarea id="job_description" name="job_description">{{job.job_description}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="compensation">Compensation</label>
+            <input type="text" id="compensation" name="compensation" value="{{job.compensation}}">
+        </div>
+
+        <div class="form-group">
+            <label for="companyId">Company ID</label>
+            <input type="text" id="companyId" name="companyId" value="{{job.companyId}}">
+        </div>
+
+        <div class="form-group">
+            <label for="mode">Mode</label>
+            <input type="text" id="mode" name="mode" value="{{job.mode}}">
+        </div>
+
+        <div class="form-group">
+            <label for="job_id">Job ID</label>
+            <input type="text" id="job_id" name="job_id" value="{{job.job_id}}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" value="{{job.category}}">
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn">Save Changes</button>
+            <a href="/job/jobFeed" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
