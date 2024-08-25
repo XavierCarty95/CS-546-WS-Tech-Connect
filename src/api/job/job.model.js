@@ -9,13 +9,11 @@ const applicantSchema = new mongoose.Schema({
 
 const likedSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    date_applied: { type: Date, required: true},
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
 const dislikedSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    date_applied: { type: Date, required: true},
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 });
 

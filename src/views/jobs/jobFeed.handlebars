@@ -42,7 +42,10 @@
       </form>
       {{/if}}
       {{#if this.userHasLiked}}
-      <p>Liked!</p>
+      <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
+        <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+        <button type="submit" class="liked-button">Liked &#128578</button>
+      </form>
       {{else}}
       <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
         <input type="hidden" name="Job_id" value="{{this.job_id}}" />
@@ -50,7 +53,10 @@
       </form>
       {{/if}}
       {{#if this.userHasDisliked}}
-      <p>Disliked</p>
+      <form action="job/dislike/{{this._id}}" method="POST" style="display: inline;">
+        <input type="hidden" name="Job_id" value="{{this.job_id}}" />
+        <button type="submit" class="disliked-button">Disliked &#128579</button>
+      </form>
       {{else}}
       <form action="job/dislike/{{this._id}}" method="POST" style="display: inline;">
         <input type="hidden" name="Job_id" value="{{this.job_id}}" />

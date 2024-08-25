@@ -50,16 +50,16 @@ export const getJobs = async (req, res) => {
                 applicant.user_id.toString() === userId.toString()
             );
         });
-        // jobs.forEach(job => {
-        //     job.userHasLiked = job.likedBy.some(like => 
-        //         like.user_id.toString() === userId.toString()
-        //     );
-        // });
-        // jobs.forEach(job => {
-        //     job.userHasDisliked = job.dislikedBy.some(dislike => 
-        //         dislike.user_id.toString() === userId.toString()
-        //     );
-        // });
+        jobs.forEach(job => {
+            job.userHasLiked = job.likedBy.some(like => 
+                like.user_id.toString() === userId.toString()
+            );
+        });
+        jobs.forEach(job => {
+            job.userHasDisliked = job.dislikedBy.some(dislike => 
+                dislike.user_id.toString() === userId.toString()
+            );
+        });
 
         const isRecruiter = req.session.user.role === 'recruiter';
 
@@ -127,11 +127,12 @@ export const applyJob = async (req, res) => {
             );
         });
 
-        res.status(200).render('jobs/jobFeed', { 
+        /*res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showLogout: true
-        });
+        });*/
+        res.redirect('/job')
 
     } catch (error) {
         res.status(500).json({ message: 'Error applying to job', error: error.message });
@@ -155,7 +156,6 @@ export const likeJob = async (req, res) => {
         const userId = req.session.user.id;
         const newLike = { 
             name: req.session.user.firstname,
-            date_applied: new Date(),
             user_id: new mongoose.Types.ObjectId(userId)
         };
 
@@ -164,37 +164,58 @@ export const likeJob = async (req, res) => {
         if (!job) {
             return res.status(404).json({ message: 'Job not found' });
         }
-        let rating = false
+        const jobs = await Job.find({}).lean();
+
+        let check = job._id
+        let hasLiked = false, hasDisliked = false;
         
-        const ratingCheck = await Job.find({}).lean();
-        ratingCheck.forEach(job => {
-            rating = job.dislikedBy.some(dislike => 
-                dislike.user_id.toString() === userId.toString()
+        jobs.forEach(job => {
+            job.userHasLiked = job.likedBy.some(like => 
+                like.user_id.toString() === userId.toString()
             );
-            console.log("LIKE RATING:", rating)
+            if(check.equals(job._id) && job.userHasLiked){
+                hasLiked = true;
+            }
         });
 
-        const jobs = await Job.find({}).lean();
-        if(!rating){
-            console.log("LIKE FIRST CHECK INPUT INTO THING ")
+        jobs.forEach(job => {
+            job.userHasDisliked = job.dislikedBy.some(dislike => 
+                dislike.user_id.toString() === userId.toString()
+            );
+            if(check.equals(job._id) && job.userHasDisliked){
+                hasDisliked = true;
+            }
+        });
+
+        if(hasLiked){
+            job.likes -= 1
+            job.likedBy.pull(newLike)
+            await job.save()
+        }
+        else if(hasDisliked){
+            job.likes += 1
+            job.likedBy.push(newLike)
+            job.dislikes -= 1
+            job.dislikedBy.pull(newLike);
+            await job.save();        
+        } else {
             job.likes += 1
             job.likedBy.push(newLike);
             await job.save();
         }
-        else{
-            console.log("TODO: Rescind Like")
-        }
+
         jobs.forEach(job => {
             job.userHasLiked = job.likedBy.some(like => 
                 like.user_id.toString() === userId.toString()
             );
         });
 
-        res.status(200).render('jobs/jobFeed', { 
+        /*res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showLogout: true
-        });
+        });*/
+        res.redirect('/job')
 
     } catch (error) {
         res.status(500).json({ message: 'Error disliking job', error: error.message });
@@ -206,7 +227,6 @@ export const dislikeJob = async (req, res) => {
         const userId = req.session.user.id;
         const newDislike = { 
             name: req.session.user.firstname,
-            date_applied: new Date(),
             user_id: new mongoose.Types.ObjectId(userId)
         };
 
@@ -215,37 +235,60 @@ export const dislikeJob = async (req, res) => {
         if (!job) {
             return res.status(404).json({ message: 'Job not found' });
         }
-        let rating = false
-        
-        const ratingCheck = await Job.find({}).lean();
-        ratingCheck.forEach(job => {
-            rating = job.likedBy.some(like => 
-                like.user_id.toString() === userId.toString()
-            );
-            console.log("DISLIKE RATING:", rating)
-        });
 
         const jobs = await Job.find({}).lean();
-        if(!rating){
-            console.log("DISLIKE FIRST CHECK INPUT INTO THING ")
+
+        let check = job._id
+        let hasLiked = false, hasDisliked = false;
+
+        jobs.forEach(job => {
+            job.userHasLiked = job.likedBy.some(like => 
+                like.user_id.toString() === userId.toString()
+            );
+            if(check.equals(job._id) && job.userHasLiked){
+                hasLiked = true;
+            }
+        });
+
+        jobs.forEach(job => {
+            job.userHasDisliked = job.dislikedBy.some(dislike => 
+                dislike.user_id.toString() === userId.toString()
+            );
+            if(check.equals(job._id) && job.userHasDisliked){
+                hasDisliked = true;
+            }
+        });
+
+        if(hasLiked){
+            job.likes -= 1
+            job.likedBy.pull(newDislike)
             job.dislikes += 1
             job.dislikedBy.push(newDislike);
             await job.save();
         }
-        else{
-            console.log("TODO: Rescind Dislike")
+        else if(hasDisliked){
+            job.dislikes -= 1
+            job.dislikedBy.pull(newDislike);
+            await job.save();
         }
+        else {
+            job.dislikes += 1
+            job.dislikedBy.push(newDislike);
+            await job.save();
+        }
+
         jobs.forEach(job => {
             job.userHasDisliked = job.dislikedBy.some(dislike => 
                 dislike.user_id.toString() === userId.toString()
             );
         });
 
-        res.status(200).render('jobs/jobFeed', { 
+        /*res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',
             jobMock: jobs,
             showLogout: true
-        });
+        });*/
+        res.redirect('/job')
 
     } catch (error) {
         res.status(500).json({ message: 'Error disliking job', error: error.message });

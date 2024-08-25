@@ -583,7 +583,7 @@ main {
     justify-content: center; /* Center the button group */
 }
 
-.apply-button, .like-button, .dislike-button, .search-button {
+.apply-button, .like-button, .dislike-button, .search-button, .liked-button, .disliked-button {
     background-color: #007bff;
     color: #fff;
     padding: 10px 20px;
@@ -612,12 +612,28 @@ main {
     background-color: #218838;
 }
 
+.liked-button {
+    background-color: #54b96b; /* Different color for Liked button */
+}
+
+.liked-button:hover {
+    background-color: #28a745;
+}
+
 .dislike-button {
     background-color: #c91d1d; /* Different color for Dislike button */
 }
 
 .dislike-button:hover {
     background-color: #a72828;
+}
+
+.disliked-button {
+    background-color: #d34545; /* Different color for Dislike button */
+}
+
+.disliked-button:hover {
+    background-color: #c91d1d;
 }
 
 .search-button {
