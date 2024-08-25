@@ -16,9 +16,6 @@ export const createSavedHistory = async (req, res) => {
       user_id: req.session.user.id
     });
 
-    console.log("Hey" ,req.session.user.id)
-
-    console.log(newHistory)
     await newHistory.save();
 
 
@@ -33,9 +30,6 @@ export const createSavedHistory = async (req, res) => {
 export const getAllSavedHistories = async (req, res) => {
   try {
     const histories = await SavedHistory.find({}).lean();
-    console.log("Hey" ,req.session.user.id)
-
-     console.log(histories)
     res.status(200).render('saved_jobs/savedJobs', { histories, showLogout: true });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching saved histories', error });

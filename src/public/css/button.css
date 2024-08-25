@@ -1,0 +1,93 @@
+/* buttons.css */
+.btn,
+.apply-button,
+.like-button,
+.dislike-button,
+.search-button,
+.btn-profile,
+.btn-delete,
+.btn-save,
+.btn-logout,
+.btn-login {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn {
+    background-color: #007bff;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.apply-button {
+    background-color: #007bff;
+}
+
+.apply-button:hover {
+    background-color: #0056b3;
+}
+
+.like-button {
+    background-color: #28a745;
+}
+
+.like-button:hover {
+    background-color: #218838;
+}
+
+.dislike-button {
+    background-color: #c91d1d;
+}
+
+.dislike-button:hover {
+    background-color: #a72828;
+}
+
+.btn-profile {
+    background-color: #007bff;
+}
+
+.btn-profile:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.btn-save {
+    background-color: #28a745;
+}
+
+.btn-save:hover {
+    background-color: #218838;
+}
+
+.btn-logout {
+    background-color: #dc3545;
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
+}
+
+.btn-login {
+    background-color: #007bff;
+}
+
+.btn-login:hover {
+    background-color: #0056b3;
+}

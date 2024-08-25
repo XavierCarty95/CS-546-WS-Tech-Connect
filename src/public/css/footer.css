@@ -1,0 +1,21 @@
+/* footer.css */
+footer {
+    margin-top: auto;
+    background-color: #000000;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    font-size: 0.9em;
+    position: relative;
+    bottom: 0;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+.push-right {
+    margin-left: auto;
+}

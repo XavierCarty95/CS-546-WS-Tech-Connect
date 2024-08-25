@@ -124,7 +124,7 @@ export const authenticateUser = async (req, res) => {
         if (user.role === "recruiter") {
           return res.redirect("/user");
         } else {
-          return res.redirect("/job");
+          return res.redirect("/job"); // Redirect to the job feed
         }
       });
     } else {
@@ -140,7 +140,12 @@ export const getUsers = async (req, res) => {
   try {
     const users = await User.find({}).lean();
 
-    console.log(users[users.length - 1].profilePic);
+    users.forEach(user => {
+      if (user.profilePic === " ") {
+          user.profilePic = "defaultdog";
+      }
+    });
+
     res.status(200).render("users/feed", {
       header: "Users",
       title: "User Feed",
@@ -148,7 +153,7 @@ export const getUsers = async (req, res) => {
       showLogout: true,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching users", error });
+    res.status(500).render("error", { message: "Internal Server Error", error });
   }
 };
 
@@ -174,6 +179,7 @@ export const getUserById = async (req, res) => {
       resume: user.resume,
     };
 
+    console.log(req.session.user.id == user._id.toString())
     res.render("profilePage/profile", {
       title: `${fullname}'s Profile`,
       user: userProfile,
@@ -181,7 +187,7 @@ export const getUserById = async (req, res) => {
       shouldShowDelete: req.session.user.id == user._id.toString()
     });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user", error });
+    res.status(404).render("error", { message: "User does not exist", status: 404 });
   }
 };
 
@@ -192,7 +198,7 @@ export const updateUser = async (req, res) => {
     });
     user.save()
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).render("error", { message: "User not found", status: 404 });
     }
     res.status(200).json(user);
   } catch (error) {
@@ -220,7 +226,7 @@ export const deleteUser = async (req, res) => {
       return res.status(200).render("login");
     });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting user", error });
+    res.status(500).render("error", { message: "Having trouble deleting user", status: 500})
   }
 };
 
@@ -246,10 +252,12 @@ export const getProfile = async (req, res) => {
       resume: user.resume,
     };
 
+    console.log(req.session.user.id == userProfile.id.toString())
     res.render("profilePage/profile", {
       title: `${fullname}'s Profile`,
       user: userProfile,
       showLogout: true,
+      shouldShowDelete: req.session.user.id == userProfile.id.toString()
     });
   } catch (error) {
     res.status(500).json({ message: "Error loading profile", error });
@@ -283,7 +291,7 @@ export const editProfile = async (req, res) => {
     });
   } catch (error) {
     console.error("Error editing profile:", error);
-    res.status(500).json({ message: "Error editing profile", error });
+    res.status(500).render("error", { message: "Error editing profile", status: 500 });
   }
 };
 
@@ -330,6 +338,6 @@ export const updateProfile = async (req, res) => {
     }
     res.redirect("/user/profile");
   } catch (error) {
-    res.status(500).json({ message: "Error updating profile", error: error.message });
+    res.status(500).render("error",{ message: "Error updating profile", status: 500 });
   }
 };
