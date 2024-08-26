@@ -858,3 +858,26 @@ main {
 .comment-form button:hover {
     background-color: #0056b3;
 }
+
+.applicant-card {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+.applicant-card h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #333;
+}
+.applicant-card p {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #555;
+}
+.applicant-number {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #007BFF;
+}

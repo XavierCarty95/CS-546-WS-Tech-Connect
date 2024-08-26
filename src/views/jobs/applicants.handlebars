@@ -7,6 +7,7 @@
                 <p><strong>Name:</strong> {{this.name}}</p>
                 <p><strong>Date Applied:</strong> {{this.date_applied}}</p>
 
+<<<<<<< HEAD
                 <form action="saved_history/saveApplicant/" method="POST" style="display: inline;">
                     <input type="hidden" name="applicant_id" value="{{this._id}}">
                     <input type="hidden" name="Job_id" value="{{this.job_id}}">
@@ -14,6 +15,18 @@
                 </form>
                 {{/each}}
             </li>
+=======
+                    <form action="/savedhistory/{{this._id}}" method="POST" style="display: inline;">
+                        <input type="hidden" name="user_id" value="{{ this.user_id}}" />
+                         <input type="hidden" name="name" value="{{ this.name}}" />
+                        <input type="hidden" name="applicant_id" value="{{this._id}}" />
+                        <input type="hidden" name="date_applied" value="{{this.date_applied}}" />
+                        <input type="hidden" name="Job_id" value="{{this._id}}" />
+                        <button type="submit" class="btn-save">Save Applicant</button>
+                    </form>
+                </li>
+            {{/each}}
+>>>>>>> 7611f82 (pull)
         </ul>
     {{else}}
         <p>No applicants found.</p>

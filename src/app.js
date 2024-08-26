@@ -8,6 +8,7 @@ import bcrypt from 'bcryptjs';
 import methodOverride from 'method-override';
 import fs from 'fs';
 import exphbs from 'express-handlebars';
+import handlebars from 'handlebars';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -27,6 +28,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 connectDB();
+
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -87,6 +89,16 @@ function isAuthenticated(req, res, next) {
     }
 }
 
+const hbs = exphbs.create({
+    handlebars: handlebars,
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true,
+    }
+});
+
+app.engine('handlebars', hbs.engine);
+
 app.use('/user', isAuthenticated, userRoutes);
 app.use('/job', isAuthenticated, jobRoutes);
 app.use('/savedhistory', isAuthenticated, savedHistoryRoutes);
@@ -132,6 +144,7 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
+
     try {
         const { email, password } = req.body;
         
@@ -177,8 +190,14 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: "Invalid Credentials - Incorrect Email or Password" });
         }
     } catch (error) {
+<<<<<<< HEAD
         console.log("An unexpected error occurred:", error.message);
         res.status(500).json({ error: "An unexpected error occurred" });
+=======
+        console.log(error.message)
+
+        res.status(500).render("error", { message: "Email or password incorrect", status: 404, isLogin: true });   ;
+>>>>>>> 7611f82 (pull)
     }
 });
 

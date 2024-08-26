@@ -15,8 +15,7 @@ export const createJob = async (req, res) => {
             category,
             comments // If comments are being passed in `req.body`
           } = req.body;
-          
-          // Create an updated job object, adding the posted_date
+        
           let job = {
             company,
             job_description,
@@ -24,7 +23,7 @@ export const createJob = async (req, res) => {
             mode,
             category,
             comments,
-            posted_date: new Date() // Add the current date as the posted_date
+            posted_date: new Date()
           };
        
         const newJob = new Job(job);
@@ -86,20 +85,18 @@ export const getJobs = async (req, res) => {
                 applicant.user_id.toString() === userId.toString()
             );
         });
-        jobs.forEach(job => {
-            job.userHasLiked = job.likedBy.some(like => 
-                like.user_id.toString() === userId.toString()
-            );
-        });
-        jobs.forEach(job => {
-            job.userHasDisliked = job.dislikedBy.some(dislike => 
-                dislike.user_id.toString() === userId.toString()
-            );
-        });
+        // jobs.forEach(job => {
+        //     job.userHasLiked = job.likedBy.some(like => 
+        //         like.user_id.toString() === userId.toString()
+        //     );
+        // });
+        // jobs.forEach(job => {
+        //     job.userHasDisliked = job.dislikedBy.some(dislike => 
+        //         dislike.user_id.toString() === userId.toString()
+        //     );
+        // });
 
         const isRecruiter = req.session.user.role === 'recruiter';
-
-        console.log(isRecruiter)
 
         res.status(200).render('jobs/jobFeed', { 
             title: 'Job Feed',

@@ -12,7 +12,6 @@ router.post("/", jobHandlers.createJob);
 router.post("/apply/:id", jobHandlers.applyJob)
 router.get('/create', jobHandlers.renderJobForm);
 router.get('/:id/applicants', jobHandlers.getApplicants)
-router.post('/:id/saved_history/saveApplicant/', savedHistory.saveApplicant)
 
 router.get("/:id", jobHandlers.getUpdatedJob);
 router.put("/:id", jobHandlers.updateJob);

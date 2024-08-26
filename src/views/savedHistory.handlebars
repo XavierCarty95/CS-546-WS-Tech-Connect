@@ -1,10 +1,11 @@
-{{#if histories.length}}
+
+{{#if applicants.length}}
     <ul class="saved-jobs-list">
-        {{#each histories}}
+        {{#each applicants}}
         <li class="saved-job-card">
-            <h2>Applicant: {{this.Applicant_Name}}</h2>
-            <p><strong>Job ID:</strong> {{this.Job_id}}</p>
-            <p><strong>Applied On:</strong> {{this.Applied_datetime}}</p>
+            <h2>Applicant: {{this.name}}</h2>
+            <p><strong>Job ID:</strong> {{this.job_id}}</p>
+            <p><strong>Applied On:</strong> {{this.date_applied}}</p>
             <form action="/savedHistory/{{this._id}}?_method=DELETE" method="POST" style="display: inline;">
                 <button type="submit" class="remove-job-button" onclick="return confirm('Are you sure you want to delete this job application?');">
                     Remove

@@ -1,43 +1,72 @@
+
 import SavedHistory from './saved_history.model.js';
+
 
 export const createSavedHistory = async (req, res) => {
   try {
-    // Assuming user info is stored in the session
-    const applicantName = req.session.user.firstname;
+    const newApplicant = { 
+      name: req.body.name, 
+      job_id: req.body.Job_id, // Ensure this matches your schema
+      date_applied: new Date(req.body.date_applied), // Parse the date correctly
+      user_id: req.body.user_id
+    };
 
-    // Get other data from the request body
-    const { Job_id } = req.body;
+  let savedHistory = await SavedHistory.findOne({}).lean();
 
-    // Create a new SavedHistory record
-    const newHistory = new SavedHistory({
-      Applicant_Name: applicantName, // Set the applicant name from session
-      Job_id,
-      Applied_datetime: new Date(),
-      user_id: req.session.user.id
-    });
+  
+  if (!savedHistory) {
+      // If no SavedHistory exists, create a new one
+      savedHistory = new SavedHistory({
+          applicants: [newApplicant]
+      });
+      savedHistory.save()
+  } else { 
+    savedHistory.applicants.push(newApplicant);
+  }
 
-    await newHistory.save();
-
-
-    res.status(201).json(newHistory);
+  const savedHistoryObject = savedHistory.toObject();
+const applicants = savedHistoryObject.applicants;
+    res.status(200).render("savedHistory", { applicants: applicants, showLogout: true })
   } catch (error) {
+<<<<<<< HEAD
     // Handle any errors that occur during the process
     res.render("error", { message: "Error creating saved history", status: 500})  }
+=======
+    res.status(500).json({ message: 'Error creating saved history', error: error.message });
+  }
+>>>>>>> 7611f82 (pull)
 };
 
 
 export const getAllSavedHistories = async (req, res) => {
   try {
+<<<<<<< HEAD
     const histories = await SavedHistory.find({}).lean();
     res.status(200).render('saved_jobs/savedJobs', { title: "SavedHistory Feed", histories, showLogout: true });
   } catch (error) {
     res.render("error", { message: "Error fetching saved histories", status: 500})  }
+=======
+    const applicants = await SavedHistory.findOne({}).lean();
+
+    let listOfApplicants = []
+    if(!applicants) { 
+      console.log("no applicants")
+    } else { 
+      listOfApplicants = applicants
+    }
+    res.status(200).render('savedHistory', { applicants: listOfApplicants.applicants, showLogout: true });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching saved histories', error: error.message });
+  }
+>>>>>>> 7611f82 (pull)
 };
 
 export const deleteSavedPost = async (req, res) => {
   try {
-    const post = await SavedHistory.findByIdAndDelete(req.params.id);
+    console.log(req.body)
+    const post = await SavedHistory.findByIdAndDelete(req.params.id, { deleted: true });
     const histories = await SavedHistory.find({}).lean();
+<<<<<<< HEAD
     res.status(200).render('saved_jobs/savedJobs', {  title: "SavedHistory Feed", histories, showLogout: true })
     if (!post) {
       res.render("error", { message: "Post not found", status: 404})    }
@@ -59,3 +88,11 @@ export const saveApplicant = async (req, res) => {
   console.log("APPLICANT", applicant)*/
 
 }
+=======
+    res.status(200).redirect('savedHistory', { applicants: histories.applicants, showLogout: true })
+
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting user", error });
+  }
+};
+>>>>>>> 7611f82 (pull)

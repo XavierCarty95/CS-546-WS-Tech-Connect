@@ -19,7 +19,6 @@ const dislikedSchema = new mongoose.Schema({
 
 
 const jobSchema = new mongoose.Schema({
-
     company: { type: String, required: true },
     job_description: { type: String, required: true },
     comments: { type: [  {
@@ -34,7 +33,7 @@ const jobSchema = new mongoose.Schema({
     likedBy: [likedSchema],
     dislikes: { type: Number, default: 0 },
     dislikedBy: [dislikedSchema],
-    applicants: [applicantSchema]
+    applicants: [applicantSchema],
 });
 
 const Job = mongoose.model('Job', jobSchema);

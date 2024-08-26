@@ -250,7 +250,7 @@ export const getProfile = async (req, res) => {
       resume: user.resume,
     };
 
-    console.log(req.session.user.id == userProfile.id.toString())
+    
     res.render("profilePage/profile", {
       title: `${fullname}'s Profile`,
       user: userProfile,

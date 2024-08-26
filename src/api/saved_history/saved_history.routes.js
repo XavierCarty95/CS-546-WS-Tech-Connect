@@ -3,7 +3,7 @@ import * as savedHistory from "./saved_history.handlers.js";
 
 const router = express.Router();
 
-router.post("/", savedHistory.createSavedHistory);
+router.post("/:id", savedHistory.createSavedHistory);
 
 router.get("/", savedHistory.getAllSavedHistories);
 
