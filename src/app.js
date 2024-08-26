@@ -12,6 +12,7 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './db.js';
+import xss from 'xss'
 
 import userRoutes from './api/user/user.routes.js';
 import jobRoutes from './api/job/job.routes.js';
@@ -133,9 +134,12 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
-        // validation.validateEmail(email)
-        // validation.validatePassword(password)
+        let { email, password } = req.body;
+        validation.validateEmail(email)
+        validation.validatePassword(password)
+
+        email = xss(email)
+        password = xss(password)
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
@@ -157,22 +161,22 @@ app.post('/login', async (req, res) => {
                 role: user.role
             };
 
+
             req.session.save((err) => {
                 if (err) {
                     return res.status(500).json({ message: "Error saving session", error: err });
                 }
 
                 if (user.role === 'recruiter') {
-                    return res.redirect('/user');  // Redirect to the recruiter feed
+                    return res.redirect('/user');
                 } else {
-                    return res.redirect('/job');    // Redirect to the job feed
+                    return res.redirect('/job');
                 }
             });
         } else {
             return res.render(401).json("error", { message: "Invalid credentials", status: 401 });
         }
     } catch (error) {
-        console.log(error.message)
         res.status(500).render("error", { message: "Email or password incorrect", status: 404, isLogin: true });
     }
 });

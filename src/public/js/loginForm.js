@@ -1,25 +1,29 @@
 document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form from submitting normally
+    event.preventDefault();
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
+    
+    $.ajax({
+        url: 'http://localhost:3000/login',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email: email, password: password }),
+        success: function(data) {
+            console.log(data)
+            if (data.success) {
+                console.log("here")
+                if (data.role === 'recruiter') {
+                    window.location.href = '/user';
+                } else {
+                    window.location.href = '/job';
+                }
+            } else {
+                $('#error-message').text(data.message);
+            }
         },
-        body: JSON.stringify({ email, password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            // Show error message if user is not authenticated
-            document.getElementById('error-message').innerText = 'User not authenticated';
+        error: function(jqXHR) {
+            $('#error-message').text('An error occurred. Please try again.');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('error-message').innerText = 'An unexpected error occurred.';
     });
 });

@@ -9,56 +9,52 @@ function validateForm(event) {
 
     let isValid = true;
 
-    // First name validation
     const firstname = document.getElementById('firstname').value.trim();
     if (!isString(firstname)) {
         showError('firstname-error', 'First name must be a non-empty string.');
         isValid = false;
     }
 
-    // Last name validation
     const lastname = document.getElementById('lastname').value.trim();
     if (!isString(lastname)) {
         showError('lastname-error', 'Last name must be a non-empty string.');
         isValid = false;
     }
 
-    // Phone number validation
     const phone = document.getElementById('phone').value.trim();
     if (!isValidPhoneNumber(phone)) {
         showError('phone-error', 'Please enter a valid phone number.');
         isValid = false;
     }
 
-    // Email validation
     const email = document.getElementById('email').value.trim();
     if (!isValidEmail(email)) {
         showError('email-error', 'Please enter a valid email address.');
         isValid = false;
     }
 
-    // Password validation
+
     const password = document.getElementById('password').value.trim();
     if (!isValidPassword(password)) {
         showError('password-error', 'Password must be at least 8 characters, contain an uppercase letter, and a special character.');
         isValid = false;
     }
 
-    // Job role validation
+
     const jobRole = document.getElementById('jobRole').value.trim();
     if (jobRole && !isString(jobRole)) {
         showError('jobRole-error', 'Job role must be a string.');
         isValid = false;
     }
 
-    // Experience validation
+
     const experience = document.getElementById('experience').value.trim();
     if (experience && !isInteger(experience)) {
         showError('experience-error', 'Experience must be an integer.');
         isValid = false;
     }
 
-    // GitHub link validation
+
     const githubLink = document.getElementById('githubLink').value.trim();
     if (githubLink && !isValidGithubLink(githubLink)) {
         showError('githubLink-error', 'Please enter a valid GitHub link.');

@@ -8,28 +8,24 @@ export const createSavedHistory = async (req, res) => {
     
     const newApplicant = { 
       name: req.body.name, 
-      job_id: req.body.Job_id, // Ensure this matches your schema
-      date_applied: new Date(), // Parse the date correctly
+      job_id: req.body.Job_id,
+      date_applied: new Date(),
       user_id: req.body.user_id
     };
 
-    // Find the existing SavedHistory document without using .lean()
     let savedHistory = await SavedHistory.findOne({});
 
     if (!savedHistory) {
-      // If no SavedHistory exists, create a new one
+
       savedHistory = new SavedHistory({
         applicants: [newApplicant]
       });
     } else {
-      // If SavedHistory exists, add the new applicant to the array
       savedHistory.applicants.push(newApplicant);
     }
 
-    // Save the document (either newly created or updated)
     await savedHistory.save();
 
-    // Convert to plain object after saving
     const applicantObj = savedHistory.toObject();
     const applicants = applicantObj.applicants;
 
@@ -52,13 +48,12 @@ export const deleteSavedPost = async (req, res) => {
   try {
     console.log(req.body)
     const updatedHistory = await SavedHistory.findOneAndUpdate(
-      { 'applicants._id': req.params.id }, // Find the document containing the applicant
-      { $pull: { applicants: { _id: req.params.id } } }, // Use $pull to remove the applicant by ID
-      { new: true } // Return the updated document
+      { 'applicants._id': req.params.id },
+      { $pull: { applicants: { _id: req.params.id } } }, 
+      { new: true }
     );
 
     const saved = await SavedHistory.findOne({})
-
     res.status(200).render("savedHistory", {  title: "SavedHistory Feed", applicants: saved.toObject().applicants, showLogout: true })
   } catch (error) {
     console.log(error.message)
