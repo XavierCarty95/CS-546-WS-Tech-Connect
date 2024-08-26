@@ -16,9 +16,6 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         if (data.error) {
             // Show error message if user is not authenticated
             document.getElementById('error-message').innerText = 'User not authenticated';
-        } else {
-            // Redirect to the dashboard or another page if login is successful
-            window.location.href = '/dashboard';
         }
     })
     .catch(error => {

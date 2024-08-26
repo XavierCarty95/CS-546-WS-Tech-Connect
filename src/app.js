@@ -8,7 +8,6 @@ import bcrypt from 'bcryptjs';
 import methodOverride from 'method-override';
 import fs from 'fs';
 import exphbs from 'express-handlebars';
-import handlebars from 'handlebars';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -28,7 +27,6 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 connectDB();
-
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -89,16 +87,6 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-const hbs = exphbs.create({
-    handlebars: handlebars,
-    runtimeOptions: {
-        allowProtoPropertiesByDefault: true,
-        allowProtoMethodsByDefault: true,
-    }
-});
-
-app.engine('handlebars', hbs.engine);
-
 app.use('/user', isAuthenticated, userRoutes);
 app.use('/job', isAuthenticated, jobRoutes);
 app.use('/savedhistory', isAuthenticated, savedHistoryRoutes);
@@ -144,23 +132,19 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-
     try {
         const { email, password } = req.body;
-        
         // validation.validateEmail(email)
         // validation.validatePassword(password)
 
         if (!email || !password) {
-            console.log("Email and password are required");
-            return res.status(400).json({ error: "Email and password are required" });
+            return res.status(400).json({ message: "Email and password are required" });
         }
 
         const user = await User.findOne({ email });
 
         if (!user) {
-            console.log("Invalid credentials: User not found");
-            return res.status(401).json({ error: "Invalid credentials" });
+            return res.render(401).json("Error", { message: "Invalid credentials", status: 404 });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -175,29 +159,21 @@ app.post('/login', async (req, res) => {
 
             req.session.save((err) => {
                 if (err) {
-                    console.log("Error saving session:", err);
-                    return res.status(500).json({ error: "Error saving session" });
+                    return res.status(500).json({ message: "Error saving session", error: err });
                 }
 
                 if (user.role === 'recruiter') {
-                    return res.json({ success: true, redirect: '/user' });
+                    return res.redirect('/user');  // Redirect to the recruiter feed
                 } else {
-                    return res.json({ success: true, redirect: '/job' });
+                    return res.redirect('/job');    // Redirect to the job feed
                 }
             });
         } else {
-            console.log("Invalid credentials: Password mismatch");
-            return res.status(401).json({ error: "Invalid Credentials - Incorrect Email or Password" });
+            return res.render(401).json("error", { message: "Invalid credentials", status: 401 });
         }
     } catch (error) {
-<<<<<<< HEAD
-        console.log("An unexpected error occurred:", error.message);
-        res.status(500).json({ error: "An unexpected error occurred" });
-=======
         console.log(error.message)
-
-        res.status(500).render("error", { message: "Email or password incorrect", status: 404, isLogin: true });   ;
->>>>>>> 7611f82 (pull)
+        res.status(500).render("error", { message: "Email or password incorrect", status: 404, isLogin: true });
     }
 });
 

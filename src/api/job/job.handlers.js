@@ -71,7 +71,7 @@ export const getJobs = async (req, res) => {
         const userId = req.session.user.id;
         const jobs = await Job.find({}).lean();
 
-        let filterJobs = [];
+        let filterJobs = jobs;
         if (req.query.query && req.query.query.trim() !== "") {
             filterJobs = jobs.filter(job =>
                 job.company.toLowerCase().includes(req.query.query.trim().toLowerCase())

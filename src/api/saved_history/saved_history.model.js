@@ -5,7 +5,7 @@ const applicantSchema = new mongoose.Schema({
   name: { type: String, required: true },
   date_applied: { type: Date, required: true},
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  job_id: { type: Schema.Types.ObjectId, ref: 'Job', required: true }
+  job_id: { type: Schema.Types.ObjectId, ref: 'Job'}
 });
 
 

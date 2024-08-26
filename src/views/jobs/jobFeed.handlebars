@@ -56,7 +56,6 @@
           <input type="hidden" name="Job_id" value="{{this.job_id}}">
           <button type="submit" class="liked-button">Liked &#128578;</button>
         </form>
-<<<<<<< HEAD
         {{else}}
         <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
           <input type="hidden" name="Job_id" value="{{this.job_id}}">
@@ -77,43 +76,6 @@
         {{/if}}
       </div>
       <div class="comments-section">
-=======
-      {{else}}
-      {{#if this.userHasApplied}}
-      <p>Applied</p>
-      {{else}}
-      <form action="job/apply/{{this._id}}" method="POST" style="display: inline;">
-        <input type="hidden" name="id" value="{{this._id}}" />
-        <input type="hidden" name="Applied_datetime" value="{{../current_datetime}}" />
-        <button type="submit" class="apply-button">Apply Now</button>
-      </form>
-      {{/if}}
-      {{#if this.userHasLiked}}
-      <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
-        <input type="hidden" name="id" value="{{this._id}}" />
-        <button type="submit" class="liked-button">Liked &#128578</button>
-      </form>
-      {{else}}
-      <form action="job/like/{{this._id}}" method="POST" style="display: inline;">
-        <input type="hidden" name="_id" value="{{this._id}}" />
-        <button type="submit" class="like-button">Like</button>
-      </form>
-      {{/if}}
-      {{#if this.userHasDisliked}}
-      <form action="job/dislike/{{this._id}}" method="POST" style="display: inline;">
-        <input type="hidden" name="id" value="{{this._id}}" />
-        <button type="submit" class="disliked-button">Disliked &#128579</button>
-      </form>
-      {{else}}
-      <form action="job/dislike/{{this._id}}" method="POST" style="display: inline;">
-        <input type="hidden" name="id" value="{{this._id}}" />
-        <button type="submit" class="dislike-button">Dislike</button>
-      </form>
-      {{/if}}
-      {{/if}}
-    </div>
-     <div class="comments-section">
->>>>>>> 7611f82 (pull)
       <h3>Comments</h3>
       
       <!-- Display existing comments -->
