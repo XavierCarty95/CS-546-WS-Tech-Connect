@@ -28,9 +28,22 @@ export const createJob = async (req, res) => {
           };
        
         const newJob = new Job(job);
-        await newJob.save();
+        console.log('newjob', newJob)
+        const exists = await Job.findById(newJob._id)
 
-           
+        console.log('newjobid', newJob._id)
+        console.log('exists?', exists)
+        if(!exists){
+            console.log('ih')
+            await newJob.save();
+            console.log("do i even get here")
+        }
+        else {
+            console.log('hi')
+            res.render("error", { message: "Failed to create job, duplicate entry", status: 409})
+        }
+
+        console.log('hiih')  
         const jobs = await Job.find({}).lean()
         const isRecruiter = isUserRecruiter(req.session);
 
@@ -43,7 +56,7 @@ export const createJob = async (req, res) => {
             isRecruiter: isRecruiter,
         })
     } catch (error) {
-        res.status(500).json({ message: 'Error creating job', error: error.message });
+        res.render("error", { message: "Failed to create job", status: 500})
     }
 };
 
@@ -97,7 +110,7 @@ export const getJobs = async (req, res) => {
             emptyFilter: filterJobs.length === 0
         });
     } catch (error) {
-        res.status(500).render("error", {message: error.message, status: 500})
+        res.render("error", { message: "Failed to get jobs", status: 404})
     }
 };
 
@@ -105,26 +118,28 @@ export const getJobById = async (req, res) => {
     try {
         const job = await Job.findById(req.params.id);
         if (!job) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
         res.status(200).json(job);
     } catch (error) {
-        res.status(500).render("error", {message: error.message, status: 500})
+        res.render("error", { message: "Failed to get job", status: 404})
     }
 };
 
 export const getUpdatedJob = async (req, res) => {
     try {
-
-    
         const updatedJob = await Job.findById(req.params.id).lean()
         console.log(updatedJob)
         if (!updatedJob) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
-        res.status(200).render("jobs/jobEdit", { job: updatedJob, showLogout: true})
+        res.status(200).render('jobs/jobEdit', { 
+            title: 'Job Feed',
+            job: updatedJob,
+            showLogout: true,
+        })
     } catch (error) {
-        res.status(500).render("error", {message: error.message, status: 500})
+        res.render("error", { message: "Failed to get updated job", status: 404})
     }
 };
 
@@ -133,7 +148,7 @@ export const updateJob = async (req, res) => {
         console.log("No")
         const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedJob) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
 
         const jobs = await Job.find({}).lean()
@@ -148,7 +163,7 @@ export const updateJob = async (req, res) => {
             isRecruiter: isRecruiter,
         })
     } catch (error) {
-        res.status(500).render("error", {message: error.message, status: 500})
+        res.render("error", { message: "Failed to update job", status: 400})
     }
 };
 
@@ -164,7 +179,7 @@ export const applyJob = async (req, res) => {
         const job = await Job.findById(req.params.id);
         
         if (!job) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
 
         job.applicants.push(newApplicant);
@@ -190,7 +205,7 @@ export const applyJob = async (req, res) => {
         res.redirect('/job')
 
     } catch (error) {
-        res.status(500).json({ message: 'Error applying to job', error: error.message });
+        res.render("error", { message: "Error applying to job", status: 500})
     }
 };
 
@@ -198,7 +213,7 @@ export const deleteJob = async (req, res) => {
     try {
         const deletedJob = await Job.findByIdAndDelete(req.params.id);
         if (!deletedJob) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
        
         const jobs = await Job.find({}).lean()
@@ -215,7 +230,7 @@ export const deleteJob = async (req, res) => {
         res.redirect('/job')
 
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting job', error });
+        res.render("error", { message: "Error deleting job", status: 500})
     }
 };
 
@@ -230,7 +245,7 @@ export const likeJob = async (req, res) => {
         const job = await Job.findById(req.params.id);
         
         if (!job) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
         const jobs = await Job.find({}).lean();
 
@@ -278,7 +293,7 @@ export const likeJob = async (req, res) => {
             );
         });
 
-        const isRecruiter = isUserRecruiter(req.session);
+        //const isRecruiter = isUserRecruiter(req.session);
 
 
         /*res.status(200).render('jobs/jobFeed', { 
@@ -291,7 +306,7 @@ export const likeJob = async (req, res) => {
         res.redirect('/job')
 
     } catch (error) {
-        res.status(500).json({ message: 'Error disliking job', error: error.message });
+        res.render("error", { message: "Error liking job", status: 500})
     }
 };
 
@@ -306,7 +321,7 @@ export const dislikeJob = async (req, res) => {
         const job = await Job.findById(req.params.id);
         
         if (!job) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
 
         const jobs = await Job.find({}).lean();
@@ -364,8 +379,7 @@ export const dislikeJob = async (req, res) => {
         res.redirect('/job')
 
     } catch (error) {
-        res.status(500).json({ message: 'Error disliking job', error: error.message });
-    }
+        res.render("error", { message: "Error disliking job", status: 500})    }
 };
 
 export const getApplicants  = async (req, res) => {
@@ -374,6 +388,7 @@ export const getApplicants  = async (req, res) => {
     const applicants = job.applicants
 
     res.status(200).render('jobs/applicants', { 
+        title: 'Job Feed',
         applicants,
         showLogout: req.session.user.id
     });
@@ -386,7 +401,7 @@ export const addComments =  async (req, res) => {
 
         const job = await Job.findById(jobId);
         if (!job) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.render("error", { message: "Job not found", status: 404})
         }
 
         job.comments.push({ author, text });
@@ -404,6 +419,6 @@ export const addComments =  async (req, res) => {
         })*/
         res.redirect('/job')
     } catch (error) {
-        res.status(500).json({ message: 'Error posting comment', error });
+        res.render("error", { message: "Error posting comment", status: 404})
     }
 };

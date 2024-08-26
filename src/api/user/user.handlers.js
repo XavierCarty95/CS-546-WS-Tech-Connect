@@ -81,7 +81,7 @@ export const createUser = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: "Error creating user", error });
+    res.render("error", { message: "Error creating user", status: 500})
   }
 };
 
@@ -100,7 +100,7 @@ export const authenticateUser = async (req, res) => {
     console.log("User Found:", user);
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.render("error", { message: "Invalid Credentials", status: 401})
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -128,12 +128,11 @@ export const authenticateUser = async (req, res) => {
         }
       });
     } else {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.render("error", { message: "Invalid Credentials", status: 401})
     }
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ message: "Error logging in", error });
-  }
+    res.render("error", { message: "Error logging in", status: 500})  }
 };
 
 export const getUsers = async (req, res) => {
@@ -153,15 +152,14 @@ export const getUsers = async (req, res) => {
       showLogout: true,
     });
   } catch (error) {
-    res.status(500).render("error", { message: "Internal Server Error", error });
-  }
+    res.render("error", { message: "Internal Server Error", status: 500})  }
 };
 
 export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).lean();
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.render("error", { message: "User not found", status: 404})
     }
 
     const fullname = `${user.firstname} ${user.lastname}`;
@@ -187,7 +185,7 @@ export const getUserById = async (req, res) => {
       shouldShowDelete: req.session.user.id == user._id.toString()
     });
   } catch (error) {
-    res.status(404).render("error", { message: "User does not exist", status: 404 });
+    res.render("error", { message: "User not found", status: 404})
   }
 };
 
@@ -198,11 +196,11 @@ export const updateUser = async (req, res) => {
     });
     user.save()
     if (!user) {
-      return res.status(404).render("error", { message: "User not found", status: 404 });
+      return res.render("error", { message: "User not found", status: 404})
     }
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error updating user", error });
+    res.render("error", { message: "Error updating user", status: 500})
   }
 };
 
@@ -210,7 +208,7 @@ export const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.render("error", { message: "User not found", status: 404})
     }
 
     req.session.destroy((err) => {
@@ -226,7 +224,7 @@ export const deleteUser = async (req, res) => {
       return res.status(200).render("login");
     });
   } catch (error) {
-    res.status(500).render("error", { message: "Having trouble deleting user", status: 500})
+    res.render("error", { message: "Trouble deleting user", status: 500})
   }
 };
 
@@ -234,7 +232,7 @@ export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.session.user.id).lean();
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.render("error", { message: "User not found", status: 404})
     }
 
     const fullname = `${user.firstname} ${user.lastname}`;
@@ -260,15 +258,14 @@ export const getProfile = async (req, res) => {
       shouldShowDelete: req.session.user.id == userProfile.id.toString()
     });
   } catch (error) {
-    res.status(500).json({ message: "Error loading profile", error });
-  }
+    res.render("error", { message: "Error loading profile", status: 500})  }
 };
 
 export const editProfile = async (req, res) => {
   try {
     const currUser = await User.findById(req.session.user.id).lean();
     if (!currUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.render("error", { message: "User not found", status: 404})
     }
 
     const user = {
@@ -290,8 +287,8 @@ export const editProfile = async (req, res) => {
       showLogout: true,
     });
   } catch (error) {
-    console.error("Error editing profile:", error);
-    res.status(500).render("error", { message: "Error editing profile", status: 500 });
+    //console.error("Error editing profile:", error);
+    res.render("error", { message: "Error editing profile", status: 500})
   }
 };
 
@@ -306,16 +303,14 @@ export const updateProfile = async (req, res) => {
 
 
   let {
-    name,
+    firstname,
+    lastname,
     phone,
     email,
     jobRole,
     experience,
     githubLink,
   } = req.body;
-  let firstname = name[0];
-  let lastname = name[1];
-
   
   try {
     const update = {
@@ -334,10 +329,9 @@ export const updateProfile = async (req, res) => {
     }).lean();
   
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.render("error", { message: "User not found", status: 404})
     }
     res.redirect("/user/profile");
   } catch (error) {
-    res.status(500).render("error",{ message: "Error updating profile", status: 500 });
-  }
+    res.render("error", { message: "Error updating profile", status: 404})  }
 };

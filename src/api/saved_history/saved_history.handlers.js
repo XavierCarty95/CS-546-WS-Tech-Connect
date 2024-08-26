@@ -22,34 +22,30 @@ export const createSavedHistory = async (req, res) => {
     res.status(201).json(newHistory);
   } catch (error) {
     // Handle any errors that occur during the process
-    res.status(500).json({ message: 'Error creating saved history', error });
-  }
+    res.render("error", { message: "Error creating saved history", status: 500})  }
 };
 
 
 export const getAllSavedHistories = async (req, res) => {
   try {
     const histories = await SavedHistory.find({}).lean();
-    res.status(200).render('saved_jobs/savedJobs', { histories, showLogout: true });
+    res.status(200).render('saved_jobs/savedJobs', { title: "SavedHistory Feed", histories, showLogout: true });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching saved histories', error });
-  }
+    res.render("error", { message: "Error fetching saved histories", status: 500})  }
 };
 
 export const deleteSavedPost = async (req, res) => {
   try {
     const post = await SavedHistory.findByIdAndDelete(req.params.id);
     const histories = await SavedHistory.find({}).lean();
-    res.status(200).render('saved_jobs/savedJobs', { histories, showLogout: true })
+    res.status(200).render('saved_jobs/savedJobs', {  title: "SavedHistory Feed", histories, showLogout: true })
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
-    }
+      res.render("error", { message: "Post not found", status: 404})    }
 
 
 
   } catch (error) {
-    res.status(500).json({ message: "Error deleting user", error });
-  }
+    res.render("error", { message: "Error deleting post", status: 500})  }
 };
 
 export const saveApplicant = async (req, res) => {

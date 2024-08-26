@@ -2,18 +2,18 @@
     <h1> Applicants </h1>
     {{#if applicants.length}}
         <ul class="applicant-list">
-            {{#each applicants}}
-                <li class="applicant-card">
-                    <p><strong>Name:</strong> {{this.name}}</p>
-                    <p><strong>Date Applied:</strong> {{this.date_applied}}</p>
+            <li class="applicant-card">
+                {{#each applicants}}
+                <p><strong>Name:</strong> {{this.name}}</p>
+                <p><strong>Date Applied:</strong> {{this.date_applied}}</p>
 
-                    <form action="saved_history/saveApplicant/" method="POST" style="display: inline;">
-                        <input type="hidden" name="applicant_id" value="{{this._id}}" />
-                        <input type="hidden" name="Job_id" value="{{this.job_id}}" />
-                        <button type="submit" class="btn-save">Save Applicant</button>
-                    </form>
-                </li>
-            {{/each}}
+                <form action="saved_history/saveApplicant/" method="POST" style="display: inline;">
+                    <input type="hidden" name="applicant_id" value="{{this._id}}">
+                    <input type="hidden" name="Job_id" value="{{this.job_id}}">
+                    <button type="submit" class="btn-save">Save Applicant</button>
+                </form>
+                {{/each}}
+            </li>
         </ul>
     {{else}}
         <p>No applicants found.</p>
