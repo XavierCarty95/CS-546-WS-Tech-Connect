@@ -14,17 +14,26 @@ export const createSavedHistory = async (req, res) => {
     };
 
     let savedHistory = await SavedHistory.findOne({});
+    console.log(savedHistory)
 
     if (!savedHistory) {
-
       savedHistory = new SavedHistory({
         applicants: [newApplicant]
       });
+      await savedHistory.save();
     } else {
-      savedHistory.applicants.push(newApplicant);
+      const applicantExists = savedHistory.applicants.some(applicant =>
+        applicant.job_id.equals(newApplicant.job_id) &&
+        applicant.user_id.equals(newApplicant.user_id)
+      );
+    
+      if (!applicantExists) {
+        savedHistory.applicants.push(newApplicant);
+        await savedHistory.save();
+      } else {
+        console.log('Applicant already exists in the history.');
+      }
     }
-
-    await savedHistory.save();
 
     const applicantObj = savedHistory.toObject();
     const applicants = applicantObj.applicants;
@@ -38,8 +47,9 @@ export const createSavedHistory = async (req, res) => {
 
 export const getAllSavedHistories = async (req, res) => {
   try {
-    const histories = await SavedHistory.find({}).lean();
-    res.status(200).render("savedHistory", { title: "SavedHistory Feed", histories, showLogout: true });
+    const histories = await SavedHistory.findOne({});
+  
+    res.status(200).render("savedHistory", { title: "SavedHistory Feed", applicants: histories.toObject().applicants, showLogout: true });
   } catch (error) {
     res.render("error", { message: "Error fetching saved histories", status: 500})  }
 };
@@ -52,6 +62,7 @@ export const deleteSavedPost = async (req, res) => {
       { $pull: { applicants: { _id: req.params.id } } }, 
       { new: true }
     );
+    updatedHistory.save()
 
     const saved = await SavedHistory.findOne({})
     res.status(200).render("savedHistory", {  title: "SavedHistory Feed", applicants: saved.toObject().applicants, showLogout: true })

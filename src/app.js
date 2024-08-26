@@ -134,6 +134,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
+        console.log("Hey")
         let { email, password } = req.body;
         validation.validateEmail(email)
         validation.validatePassword(password)
@@ -177,6 +178,7 @@ app.post('/login', async (req, res) => {
             return res.render(401).json("error", { message: "Invalid credentials", status: 401 });
         }
     } catch (error) {
+        console.log(error.message)
         res.status(500).render("error", { message: "Email or password incorrect", status: 404, isLogin: true });
     }
 });

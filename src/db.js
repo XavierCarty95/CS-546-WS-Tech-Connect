@@ -1,7 +1,7 @@
 
 import mongoose from 'mongoose';
 
-const mongoURI = 'mongodb://127.0.0.1:27017/Tech-Connect';
+const mongoURI = 'mongodb://127.0.0.1:27017/techconnect';
 ;
 
 const connectDB = async () => {
