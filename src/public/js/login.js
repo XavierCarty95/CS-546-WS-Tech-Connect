@@ -1,4 +1,7 @@
+
 document.getElementById('login-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from submitting normally
+
     let isValid = true;
 
     // Clear previous error messages
@@ -21,8 +24,31 @@ document.getElementById('login-form').addEventListener('submit', function(event)
 
     // Prevent form submission if there are validation errors
     if (!isValid) {
-        event.preventDefault();
+        return;
     }
+
+    // AJAX form submission
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            // Show error message if user is not authenticated
+            document.getElementById('error-message').innerText = data.error;
+        } else {
+            // Redirect based on user role
+            window.location.href = data.redirect;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('error-message').innerText = 'An unexpected error occurred.';
+    });
 });
 
 function validateEmail(email) {

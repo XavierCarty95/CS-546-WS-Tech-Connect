@@ -134,17 +134,20 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        
         // validation.validateEmail(email)
         // validation.validatePassword(password)
 
         if (!email || !password) {
-            return res.status(400).json({ message: "Email and password are required" });
+            console.log("Email and password are required");
+            return res.status(400).json({ error: "Email and password are required" });
         }
 
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.render(401).json("Error", { message: "Invalid credentials", status: 404 });
+            console.log("Invalid credentials: User not found");
+            return res.status(401).json({ error: "Invalid credentials" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -159,21 +162,23 @@ app.post('/login', async (req, res) => {
 
             req.session.save((err) => {
                 if (err) {
-                    return res.status(500).json({ message: "Error saving session", error: err });
+                    console.log("Error saving session:", err);
+                    return res.status(500).json({ error: "Error saving session" });
                 }
 
                 if (user.role === 'recruiter') {
-                    return res.redirect('/user');  // Redirect to the recruiter feed
+                    return res.json({ success: true, redirect: '/user' });
                 } else {
-                    return res.redirect('/job');    // Redirect to the job feed
+                    return res.json({ success: true, redirect: '/job' });
                 }
             });
         } else {
-            return res.render(401).json("error", { message: "Invalid credentials", status: 401 });
+            console.log("Invalid credentials: Password mismatch");
+            return res.status(401).json({ error: "Invalid Credentials - Incorrect Email or Password" });
         }
     } catch (error) {
-        console.log(error.message)
-        res.status(500).render("error", { message: "Email or password incorrect", status: 404, isLogin: true });
+        console.log("An unexpected error occurred:", error.message);
+        res.status(500).json({ error: "An unexpected error occurred" });
     }
 });
 
