@@ -26,3 +26,5 @@ Ensure that you have the following installed on your machine:
 2. npm install to get all dependencies
 
 3. npm run start
+
+4. You can then open your web browser and navigate to http://localhost:3000
